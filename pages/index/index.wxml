@@ -1,0 +1,18 @@
+<view class="cover" wx:if="{{!isauth}}">
+	<button open-type="getUserInfo" bindgetuserinfo="getUserInfo" class="btn_get">授权</button>
+</view>
+<view class="list-box">
+  <scroll-view scroll-y="true" lower-threshold="200" style='height:100%' bindscrolltolower="scrollmore">
+    <view class="list-item" wx:for="{{litems}}" wx:key="index" wx:for-item="litemData">
+        <image class="poster" bindtap='goDetail' data-actid="{{litemData.id}}" lazy-load="true" src="{{litemData.actimg}}" />
+        <view class="infos">
+          <view class="infos_text">奖品: {{litemData.actname}}</view>
+          <view class="infos_ico">拼团</view>
+        </view>
+        <view class="infos">
+          <text class="infos_time">{{litemData.begintime}} 自动开奖</text>
+        </view>
+        <image class="isjoin" wx:if="{{litemData.isjoin}}" src="../../assets/image/icon-tag.png"></image>
+    </view>
+  </scroll-view>
+</view>

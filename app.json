@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/detail/detail",
+    "pages/subject/subject",
+    "pages/user/user",
+    "pages/subject-list/subject-list",
+    "pages/history-list/history-list",
+    "pages/share/share"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#006554",
+    "navigationBarTextStyle": "#bfd730",
+    "navigationBarTitleText": "贝美森健康体验",
+    "backgroundColor": "#eeeeee",
+    "backgroundTextStyle": "light",
+    "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "/assets/image/index.png",
+        "selectedIconPath": "/assets/image/index-active.png"
+      },
+      {
+        "pagePath": "pages/subject/subject",
+        "text": "分类",
+        "iconPath": "/assets/image/subject.png",
+        "selectedIconPath": "/assets/image/subject-active.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "用户",
+        "iconPath": "/assets/image/user.png",
+        "selectedIconPath": "/assets/image/user-active.png"
+      }
+    ]
+  }
+}

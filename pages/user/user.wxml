@@ -1,0 +1,30 @@
+<view class="container">
+  <view class="user-info">
+    <!--<open-data type="userAvatarUrl" class="avatar"></open-data>
+    <open-data type="userNickName" lang="zh_CN" class="name"></open-data>-->
+    <image class="avatar" src="{{avatarUrl}}"></image>
+    <text class="name">{{nickName}}</text>
+  </view>
+  <view class="share" bindtap="gotoShare">
+    <text>分享小程序</text>
+    <image src="/assets/image/more.png" mode="aspectFit"></image>
+  </view>
+
+  <view class="history" bindtap="gotoHistory">
+    <text>观看历史</text>
+    <image src="/assets/image/more.png" mode="aspectFit"></image>
+  </view>
+  <view class="history-list" wx:if="{{movies.length}}">
+
+    <view class="movie-item" wx:for="{{movies}}" wx:key="{{item._id}}" bindtap="gotoDetail" data-movie-data="{{item}}">
+      <image class="poster" mode="widthFix" lazy-load="true" src="{{item.poster}}" />
+      <view class="title">
+        <text>{{item.title}} <text class="rate">{{item.rate}}</text></text>
+      </view>
+      <view class="year-type">
+        <text>{{item.types}} / {{item.year}}</text>
+      </view>
+    </view>
+
+  </view>
+</view>

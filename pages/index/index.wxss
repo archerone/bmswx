@@ -1,0 +1,16 @@
+/* pages/index/index.wxss */
+page{
+  height: 100%;
+}
+@import "/common/style/list.wxss";
+.cover{width:100%;height:100%;background:rgba(0,0,0,0.6);position:fixed;z-index:20;}
+.btn_get{width:200rpx;height:100rpx;background:red;}
+.list-box{ width:750rpx;height:100%;background:#f6f7f9;}
+.list-item{ width:700rpx;height:500rpx;background:#fff;border-radius:10px;margin-bottom:24rpx;position:relative;margin:25rpx;}
+.list-item .poster{width:100%;height:341rpx;border-radius:10rpx;margin-bottom:10rpx;margin-top:20rpx;}
+.infos{padding:0rpx 30rpx;}
+.infos_text{max-width:550rpx;float:left;margin-right:20rpx;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.infos_ico{display: inline-block;font-size:24rpx;border:1px solid #546bff; border-radius:6rpx;padding:2rpx 6rpx;color:#546bff;vertical-align:5rpx;}
+.infos_time{font-size:24rpx;color:#aaa;}
+.isjoin{width:138rpx;height:121rpx;position: absolute;right: 24rpx;bottom:12rpx;}
+.nomore{width:698rpx;font-size: 20rpx;color: #b0b0b0;text-align: center;padding-bottom:20rpx;}
