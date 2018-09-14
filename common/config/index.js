@@ -1,3 +1,3 @@
 export default {
-  domain: 'http://10.199.5.88/gitlab'
+  domain: 'https://api.beimsn.com'
 }

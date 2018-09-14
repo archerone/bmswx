@@ -18,7 +18,8 @@
             </view>
         </view>
         <button class="item_btn" bindtap="opengroup" wx:if="{{status==0 && !iscreat && isbegin && !isend}}">开团参与</button>
-        <button class="item_btn" bindtap="goInvite" wx:if="{{status==0 && !isfull && iscreat && isbegin && !isend}}">邀请朋友组队</button>
+        <button class="item_btn" bindtap="joingroup" wx:if="{{status==0 && iscreat && isbegin && !isend && sharekey}}">加入{{gleader}}的邀请参与抽奖</button>
+        <button class="item_btn" bindtap="goInvite" wx:if="{{status==0 && !isfull && iscreat && isbegin && !isend && !sharekey}}">邀请朋友组队</button>
         <button class="item_btn item_btn2" wx:if="{{status==0 && !isbegin}}">活动未开始</button>
         <button class="item_btn item_btn2" wx:if="{{status==0 && isend}}">活动已经结束</button>
         <button class="item_btn item_btn2" wx:if="{{status==0 && isfull}}">组团成功，等待开奖</button>

@@ -5,7 +5,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: '小程序抽奖',
-      path: '/page/detail?initiator=118',
+      path: '/page/detail?actid='+this.data.actid+'&sharekey='+this.data.openkey,
       imageUrl:'../../assets/image/peo1.jpg',
       success:function(res){
           console.log('33')
@@ -31,11 +31,47 @@ Page({
     isend:false,
     iscreat:false,
     actid:null,
-    joinman:[]
+    joinman:[],
+    openkey:null,
+    sharekey:null,
+    gleader:null
   },
-  getjoman(){
+  joingroup(){
       var that = this;
-      utils.request('/myapi/api/bmsxcx/taste/login/getjoins',
+      utils.showModal('提示','入团成功后无法再加入别的团',function(res){
+          if(res.confirm){
+              utils.request('/api/bmsxcx/taste/login/joins',
+                  {
+                    username: app.globalData.userInfo.nickName,
+                    actid: that.data.actid,
+                    groupkey: that.data.sharekey
+                  },
+                  "POST", 2, function (res) {
+                  wx.hideLoading()
+                  console.log(res)
+                  if(res.data.rescode==0){
+                     wx.showToast({
+                        title: res.data.msg,
+                        icon: 'none',
+                        duration: 2000
+                     })
+                     return false;
+                  }
+                  var _url = '../detail/detail?actid='+that.data.actid;
+                  wx.redirectTo({
+                      url: _url
+                  })
+
+              },function(res){
+                  wx.hideLoading()
+                  //utils.showModal('提示', res.errMsg,false);
+              });
+          }
+      },function(){})
+  },
+  getjoman(){  //获取最近参与的用户信息（8人）
+      var that = this;
+      utils.request('/api/bmsxcx/taste/login/getjoins',
           {
             actid: that.data.actid
           },
@@ -51,11 +87,11 @@ Page({
           //utils.showModal('提示', res.errMsg,false);
       });
   },
-  opengroup(){
+  opengroup(){  //开团
       var that = this;
       utils.showModal('提示','开团成功后可以邀请好友加入',function(res){
           if(res.confirm){
-              utils.request('/myapi/api/bmsxcx/taste/login/joins',
+              utils.request('/api/bmsxcx/taste/login/joins',
                   {
                     username: app.globalData.userInfo.nickName,
                     actid: that.data.actid
@@ -83,75 +119,105 @@ Page({
           }
       },function(){})
   },
-  getact(){
+  getact(){   //获取活动信息
       var that = this;
-      utils.request('/myapi/api/bmsxcx/taste/list/getActinfo',
-          {
-            actid: that.data.actid,
-            thirdsess: wx.getStorageSync('thirdSession')
-          },
-          "POST", 2, function (res) {
-          wx.hideLoading()
-          console.log(res)
-          var isfull = res.data.groupmans.length>5?true:false;
-          var iscreat = res.data.groupmans.length>0?true:false;
-          var now = new Date().getTime();
-          var end = new Date(res.data.endtime).getTime();
-          var begin = new Date(res.data.begintime).getTime();
-          var otime = end - now;
-          var otimes = utils.getRemainderTime(otime)
-          var stime = begin - now;
-          that.checktime(begin,end)  //根据时间判断状态
-
-          if(stime>0){ //未到开始时间,倒计时
-              var time = null;
-              clearInterval(time);
-              time = setInterval(function(){
-                  if(stime<=0){
-                     clearInterval(time);
-                     that.checktime(begin,end)
-                      return false;
-                  }
-                  stime-=1000;
-                  that.setData({
-                    stimes: utils.getRemainderTime(stime)
-                  })
-              },1000);
-          }
-
-          if(otime>0){  //活动还未结束时,倒计时
-              var timer =null;
-              clearInterval(timer);
-              timer = setInterval(function(){
-                 if(otime<=0){
-                    clearInterval(timer);
-                    that.checktime(begin,end)
-                    return false;
-                 }
-                 otime-=1000;
-                 otimes = utils.getRemainderTime(otime)
-                 that.setData({
-                    otimes: otimes
-                 })
-              },1000)
-          }
-          console.log(otime,otimes)
-          that.setData({
-              actdata: res.data,
-              status: res.data.status,
-              isfull: isfull,
-              iscreat: iscreat,
-              actid: res.data.id,
-              otimes: otimes
-          })
-          console.log(that.data.actdata,that.data.isfull)
-          that.getjoman();
-      },function(res){
-          wx.hideLoading()
-          //utils.showModal('提示', res.errMsg,false);
-      });
+      if(that.data.sharekey){  //受邀打开页面
+          utils.request('/api/bmsxcx/taste/list/getActinfo',
+              {
+                actid: that.data.actid,
+                sharekey: that.data.sharekey
+              },
+              "POST", 2, function (res) {
+              wx.hideLoading()
+              console.log(res)
+              that.initact(res);
+          },function(res){
+              wx.hideLoading()
+              //utils.showModal('提示', res.errMsg,false);
+          });
+      }else{
+          utils.request('/api/bmsxcx/taste/list/getActinfo',
+              {
+                actid: that.data.actid,
+                thirdsess: wx.getStorageSync('thirdSession')
+              },
+              "POST", 2, function (res) {
+              wx.hideLoading()
+              console.log(res)
+              that.initact(res);
+          },function(res){
+              wx.hideLoading()
+              //utils.showModal('提示', res.errMsg,false);
+          });
+      }
   },
-  checktime(begin,end){
+  initact(res){  //初始化活动信息
+        var that = this;
+        var isfull = res.data.groupmans.length>5?true:false;
+        var iscreat = res.data.groupmans.length>0?true:false;
+        var now = new Date().getTime();
+        var end = new Date(res.data.endtime).getTime();
+        var begin = new Date(res.data.begintime).getTime();
+        var otime = end - now;
+        var otimes = utils.getRemainderTime(otime)
+        var stime = begin - now;
+        that.checktime(begin,end)  //根据时间判断状态
+
+        for(var i=0;i<res.data.groupmans.length;i++){
+            if(res.data.groupmans[i]['jointype']==1){
+                that.setData({
+                    gleader: res.data.groupmans[i]['username'],
+                    openkey: res.data.groupmans[i]['groupkey']
+                })
+            }
+        }
+        console.log(that.data.gleader,that.data.openkey)
+
+        if(stime>0){ //未到开始时间,倒计时
+            var time = null;
+            clearInterval(time);
+            time = setInterval(function(){
+                if(stime<=0){
+                   clearInterval(time);
+                   that.checktime(begin,end)
+                    return false;
+                }
+                stime-=1000;
+                that.setData({
+                  stimes: utils.getRemainderTime(stime)
+                })
+            },1000);
+        }
+
+        if(otime>0){  //活动还未结束时,倒计时
+            var timer =null;
+            clearInterval(timer);
+            timer = setInterval(function(){
+               if(otime<=0){
+                  clearInterval(timer);
+                  that.checktime(begin,end)
+                  return false;
+               }
+               otime-=1000;
+               otimes = utils.getRemainderTime(otime)
+               that.setData({
+                  otimes: otimes
+               })
+            },1000)
+        }
+        console.log(otime,otimes)
+        that.setData({
+            actdata: res.data,
+            status: res.data.status,
+            isfull: isfull,
+            iscreat: iscreat,
+            actid: res.data.id,
+            otimes: otimes
+        })
+        console.log(that.data.actdata,that.data.isfull)
+        that.getjoman();
+  },
+  checktime(begin,end){  //初始化时间状态
       var that = this;
       var now = new Date().getTime();
       var otime = end - now;
@@ -223,7 +289,8 @@ Page({
    */
   onLoad: function (options) {
       this.setData({
-        actid: options.actid
+        actid: options.actid,
+        sharekey: options.sharekey
       })
       this.getact();
   },

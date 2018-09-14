@@ -74,7 +74,7 @@ Page({
   },
   getMoreinfo: function(sess,encry,iv,signature,rawData){  //获取敏感信息unionid,前提是在一个开放平台下的应用
 
-      utils.request('/myapi/api/bmsxcx/taste/login/getmore',
+      utils.request('/api/bmsxcx/taste/login/getmore',
           {
             thirdsess: sess,
             encry: encry,
@@ -93,7 +93,7 @@ Page({
   getin:function(){
       var that = this;
       utils.showLoading("数据加载中");
-      utils.request('/myapi/api/bmsxcx/taste/login/checkuser',
+      utils.request('/api/bmsxcx/taste/login/checkuser',
           {
             thirdsess: wx.getStorageSync('thirdSession'),
             username: that.data.nickName,
@@ -117,7 +117,7 @@ Page({
   },
   getList(){
       var that = this;
-      utils.request('/myapi/api/bmsxcx/taste/list/getActlist',
+      utils.request('/api/bmsxcx/taste/list/getActlist',
           {
             num: that.data.page,
             numget: that.data.size,

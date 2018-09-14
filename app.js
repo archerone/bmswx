@@ -14,7 +14,7 @@ App({
     wx.checkSession({
        success:function(){
           if(thirdSession){  //wx的session未过期,还需判断thirdsession是否过期
-              utils.request('/myapi/api/bmsxcx/taste/login/islogin', {thirdsess: thirdSession}, "POST", 2, function (res) {
+              utils.request('/api/bmsxcx/taste/login/islogin', {thirdsess: thirdSession}, "POST", 2, function (res) {
                   wx.hideLoading()
                   if(res.data){ //1,已登录
                       console.log('wx.session未过期;thirdSession也未过期,已刷新');
@@ -85,7 +85,7 @@ App({
           success: wxres => {
             // 发送 res.code 到后台换取 openId, sessionKey, unionId
             if(wxres.code){
-                utils.request('/myapi/api/bmsxcx/taste/login/getopenid', {code: wxres.code}, "POST", 2, function (res) {
+                utils.request('/api/bmsxcx/taste/login/getopenid', {code: wxres.code}, "POST", 2, function (res) {
                     wx.hideLoading()
                     console.log('登录微信成功')
                     if(res.statusCode >= 200 && res.statusCode < 300){
