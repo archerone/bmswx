@@ -25,7 +25,7 @@
 .item3_info{width:635rpx;margin:0 auto 50rpx;font-size:26rpx;}
 .list-item4{width:698rpx;height:150rpx;border-radius:10px;overflow:hidden;margin-bottom:40rpx;}
 .item4_tit{font-size:26rpx;color:#aaa;text-align: center;margin-bottom:20rpx;}
-.item4_box{height: 75rpx;}
+.item4_box{height: 75rpx;float:left;}
 .item4_peo{width: 70rpx;height: 70rpx;float:left;margin-right:19rpx;}
 .item4_peomore{width: 70rpx;height: 70rpx;float:left;font-size:24rpx;color: #aaa;line-height: 70rpx;margin-left:10rpx;}
 .infos_resu{width: 665rpx;margin:75rpx auto 0;text-align: center;}

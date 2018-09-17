@@ -2,19 +2,6 @@
 const app = getApp()
 var utils = require('../../utils/util.js');
 Page({
-  onShareAppMessage: function () {
-    return {
-      title: '小程序抽奖',
-      path: '/page/detail?actid='+this.data.actid+'&sharekey='+this.data.openkey,
-      imageUrl:'../../assets/image/peo1.jpg',
-      success:function(res){
-          console.log('33')
-      },
-      fail:function(res){
-        console.log('44')
-      }
-    }
-  },
   /**
    * 页面的初始数据
    */
@@ -34,7 +21,8 @@ Page({
     joinman:[],
     openkey:null,
     sharekey:null,
-    gleader:null
+    gleader:null,
+    isgetg:0
   },
   joingroup(){
       var that = this;
@@ -130,7 +118,9 @@ Page({
               "POST", 2, function (res) {
               wx.hideLoading()
               console.log(res)
-              that.initact(res);
+              if(res.data.groupmans){
+                that.initact(res);
+              }
           },function(res){
               wx.hideLoading()
               //utils.showModal('提示', res.errMsg,false);
@@ -153,7 +143,7 @@ Page({
   },
   initact(res){  //初始化活动信息
         var that = this;
-        var isfull = res.data.groupmans.length>5?true:false;
+        var isfull = res.data.groupmans.length>=res.data.groupnum?true:false;
         var iscreat = res.data.groupmans.length>0?true:false;
         var now = new Date().getTime();
         var end = new Date(res.data.endtime).getTime();
@@ -161,6 +151,8 @@ Page({
         var otime = end - now;
         var otimes = utils.getRemainderTime(otime)
         var stime = begin - now;
+        var iswin = res.data.groupmans[0]['iswin'];
+
         that.checktime(begin,end)  //根据时间判断状态
 
         for(var i=0;i<res.data.groupmans.length;i++){
@@ -169,6 +161,9 @@ Page({
                     gleader: res.data.groupmans[i]['username'],
                     openkey: res.data.groupmans[i]['groupkey']
                 })
+            }
+            if(res.data.groupmans[i]['username']==app.globalData.userInfo.nickName){
+                var isgetg = res.data.groupmans[i]['status'];
             }
         }
         console.log(that.data.gleader,that.data.openkey)
@@ -212,9 +207,11 @@ Page({
             isfull: isfull,
             iscreat: iscreat,
             actid: res.data.id,
-            otimes: otimes
+            otimes: otimes,
+            iswin: iswin,
+            isgetg: isgetg
         })
-        console.log(that.data.actdata,that.data.isfull)
+        console.log(that.data.actdata,that.data.isfull,that.data.iswin)
         that.getjoman();
   },
   checktime(begin,end){  //初始化时间状态
@@ -288,9 +285,10 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+      var sharekey = options.sharekey?options.sharekey:'';
       this.setData({
         actid: options.actid,
-        sharekey: options.sharekey
+        sharekey: sharekey
       })
       this.getact();
   },
@@ -343,6 +341,15 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
-  }
+    return {
+      title: '快来拼团抽奖',
+      path: '/pages/detail/detail?actid='+this.data.actid+'&sharekey='+this.data.openkey,
+      success:function(res){
+          console.log('33')
+      },
+      fail:function(res){
+        console.log('44')
+      }
+    }
+  },
 })
