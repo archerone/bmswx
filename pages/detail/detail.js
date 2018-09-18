@@ -1,6 +1,7 @@
 // pages/detail/detail.js
 const app = getApp()
 var utils = require('../../utils/util.js');
+var login = require('../../utils/login.js');
 Page({
   /**
    * 页面的初始数据
@@ -19,10 +20,11 @@ Page({
     iscreat:false,
     actid:null,
     joinman:[],
-    openkey:null,
+    joinkey:null,
     sharekey:null,
     gleader:null,
-    isgetg:0
+    isgetg:0,
+    isauth:false
   },
   joingroup(){
       var that = this;
@@ -77,7 +79,7 @@ Page({
   },
   opengroup(){  //开团
       var that = this;
-      utils.showModal('提示','开团成功后可以邀请好友加入',function(res){
+      utils.showModal('提示','开团成功后可以邀请好友加入,不能加入别的团',function(res){
           if(res.confirm){
               utils.request('/api/bmsxcx/taste/login/joins',
                   {
@@ -109,6 +111,7 @@ Page({
   },
   getact(){   //获取活动信息
       var that = this;
+      utils.showLoading("数据加载中");
       if(that.data.sharekey){  //受邀打开页面
           utils.request('/api/bmsxcx/taste/list/getActinfo',
               {
@@ -143,15 +146,24 @@ Page({
   },
   initact(res){  //初始化活动信息
         var that = this;
-        var isfull = res.data.groupmans.length>=res.data.groupnum?true:false;
-        var iscreat = res.data.groupmans.length>0?true:false;
         var now = new Date().getTime();
-        var end = new Date(res.data.endtime).getTime();
-        var begin = new Date(res.data.begintime).getTime();
+        var res_endtime = res.data.endtime.replace(/\-/g, "/");
+        var res_begintime = res.data.begintime.replace(/\-/g, "/");
+        var end = new Date(res_endtime).getTime();
+        var begin = new Date(res_begintime).getTime();
         var otime = end - now;
         var otimes = utils.getRemainderTime(otime)
         var stime = begin - now;
-        var iswin = res.data.groupmans[0]['iswin'];
+        if(res.data.groupmans.length>0){
+          var isfull = res.data.groupmans.length>=res.data.groupnum?true:false;
+          var iscreat = res.data.groupmans.length>0?true:false;
+          var iswin = res.data.groupmans[0]['iswin'];
+          that.setData({
+              isfull: isfull,
+              iscreat: iscreat,
+              iswin: iswin
+          })
+        }
 
         that.checktime(begin,end)  //根据时间判断状态
 
@@ -159,14 +171,17 @@ Page({
             if(res.data.groupmans[i]['jointype']==1){
                 that.setData({
                     gleader: res.data.groupmans[i]['username'],
-                    openkey: res.data.groupmans[i]['groupkey']
+                    joinkey: res.data.groupmans[i]['groupkey']
                 })
             }
             if(res.data.groupmans[i]['username']==app.globalData.userInfo.nickName){
                 var isgetg = res.data.groupmans[i]['status'];
+                that.setData({
+                    isgetg: isgetg
+                })
             }
         }
-        console.log(that.data.gleader,that.data.openkey)
+        console.log(that.data.gleader,that.data.joinkey)
 
         if(stime>0){ //未到开始时间,倒计时
             var time = null;
@@ -204,12 +219,8 @@ Page({
         that.setData({
             actdata: res.data,
             status: res.data.status,
-            isfull: isfull,
-            iscreat: iscreat,
             actid: res.data.id,
-            otimes: otimes,
-            iswin: iswin,
-            isgetg: isgetg
+            otimes: otimes
         })
         console.log(that.data.actdata,that.data.isfull,that.data.iswin)
         that.getjoman();
@@ -280,17 +291,50 @@ Page({
       })
     }.bind(this), 200)
   },
-
+  getUserInfo: function () {
+     var that = this;
+     login.getuinfo(this,function(res){
+          app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
+          app.globalData.userInfo.nickName = res.userInfo.nickName;
+          app.globalData.userInfo.isauth = true;
+          that.setData({
+            nickName: app.globalData.userInfo.nickName,
+            isauth:true
+          })
+          that.getin(); //登录自身服务器
+      })
+  },
+  getin:function(){
+      var that = this;
+      login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
+        console.log(res.data.msg);
+        if(res.data.status == 1){
+           app.globalData.userInfo.islogin = true;
+        }
+      })
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-      var sharekey = options.sharekey?options.sharekey:'';
-      this.setData({
-        actid: options.actid,
-        sharekey: sharekey
-      })
-      this.getact();
+    var that = this;
+    var sharekey = options.sharekey?options.sharekey:'';
+    if(app.globalData.userInfo.isauth){
+        var isauth = app.globalData.userInfo.isauth;
+    }
+    that.setData({
+      actid: options.actid,
+      sharekey: sharekey,
+      isauth: isauth
+    })
+    utils.showLoading("数据加载中");
+    login.checksess(function(){
+        login.gologin(function(){
+            that.getact();
+        });
+    },function(){
+        that.getact();
+    })
   },
 
   /**
@@ -307,8 +351,8 @@ Page({
     wx.setNavigationBarTitle({
       title: '抽奖详情'
     })
-  },
 
+  },
   /**
    * 生命周期函数--监听页面隐藏
    */
@@ -343,7 +387,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: '快来拼团抽奖',
-      path: '/pages/detail/detail?actid='+this.data.actid+'&sharekey='+this.data.openkey,
+      path: '/pages/detail/detail?actid='+this.data.actid+'&sharekey='+this.data.joinkey,
       success:function(res){
           console.log('33')
       },

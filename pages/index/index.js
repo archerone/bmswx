@@ -1,6 +1,7 @@
 // pages/index/index.js
 const app = getApp()
 var utils = require('../../utils/util.js');
+var login = require('../../utils/login.js');
 Page({
 
   /**
@@ -12,7 +13,6 @@ Page({
     size:3,
     loading:true,
     isauth:false,
-    islogin:false,
     nickName:'',
     litems:[],
     nomore:false
@@ -33,87 +33,28 @@ Page({
     this.getList();
   },
   getUserInfo: function () {
-    var that = this
-    wx.getSetting({
-      success(res) {
-        if (!res.authSetting['scope.userInfo']) {  //若拿不到授权信息
-          wx.authorize({
-            scope: 'scope.userInfo',
-            success() {
-
-            },
-            fail(){
-              console.log('未授权1')
-            }
+     var that = this;
+     login.getuinfo(this,function(res){
+          app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
+          app.globalData.userInfo.nickName = res.userInfo.nickName;
+          app.globalData.userInfo.isauth = true;
+          that.setData({
+            nickName: app.globalData.userInfo.nickName,
+            isauth:true
           })
-        }
-        else {
-          console.log('已授权')
-          wx.getUserInfo({
-            success: (res) => {
-              that.setData({
-                isauth:true
-              });
-              console.log(res)
-              app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
-              app.globalData.userInfo.nickName = res.userInfo.nickName;
-              //console.log(app.globalData.userInfo.avatarUrl)
-              that.setData({
-                nickName: app.globalData.userInfo.nickName
-              })
-              that.getin(); //登录自身服务器
-
-              //that.getMoreinfo(wx.getStorageSync('thirdSession'),res.encryptedData,res.iv,res.signature,res.rawData)
-
-            }
-          })
-          //that.UserLogin();
-        }
-      }
-    })
-  },
-  getMoreinfo: function(sess,encry,iv,signature,rawData){  //获取敏感信息unionid,前提是在一个开放平台下的应用
-
-      utils.request('/api/bmsxcx/taste/login/getmore',
-          {
-            thirdsess: sess,
-            encry: encry,
-            iv: iv,
-            signature:signature,
-            rawData: rawData
-          },
-          "POST", 2, function (res) {
-          wx.hideLoading()
-          console.log('getMoreinfo',res)
-      },function(res){
-          wx.hideLoading()
-          //utils.showModal('提示', res.errMsg,false);
-      });
+          that.getin(); //登录自身服务器
+          //login.getminfo(wx.getStorageSync('thirdSession'),res.encryptedData,res.iv,res.signature,res.rawData)
+     })
   },
   getin:function(){
-      var that = this;
-      utils.showLoading("数据加载中");
-      utils.request('/api/bmsxcx/taste/login/checkuser',
-          {
-            thirdsess: wx.getStorageSync('thirdSession'),
-            username: that.data.nickName,
-            avatarurl: app.globalData.userInfo.avatarUrl
-          },
-          "POST", 2, function (res) {
-          wx.hideLoading()
-          //console.log(res)
-          if(res.data.status == 1){
-              console.log(res.data.msg);
-              that.setData({
-                islogin: true
-              })
-              that.getList();
-
-          }
-      },function(res){
-          wx.hideLoading()
-          //utils.showModal('提示', res.errMsg,false);
-      });
+        var that = this;
+        login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
+            if(res.data.status == 1){
+                console.log(res.data.msg);
+                app.globalData.userInfo.islogin = true;
+                that.getList();
+            }
+        })
   },
   getList(){
       var that = this;
@@ -158,40 +99,12 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var that = this;
-
-    if(app.globalData.userInfo.nickName){
-       that.setData({
-          nickName: app.globalData.userInfo.nickName
-       })
-       that.getin(); //登录自身服务器
+    if(!app.globalData.userInfo.islogin){
+        utils.showLoading("数据加载中");
+        login.checksess(function(){
+           login.gologin();
+        })
     }
-
-    if(app.globalData.userInfo.isauth){
-       that.setData({
-          isauth:true
-       });
-    }
-    app.userInfoReadyCallback = res =>{
-
-      if(!app.globalData.userInfo.isauth){
-          console.log('userinfo',res);
-          app.globalData.userInfo.nickName = res.userInfo.nickName;
-          app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
-          console.log(app.globalData.userInfo.nickName);
-
-          that.setData({
-            nickName: app.globalData.userInfo.nickName
-          })
-          that.getin(); //登录自身服务器
-
-          that.setData({
-              isauth:true
-          });
-          //that.getMoreinfo(wx.getStorageSync('thirdSession'),res.encryptedData,res.iv,res.signature,res.rawData)
-      }
-
-    };
   },
 
   /**

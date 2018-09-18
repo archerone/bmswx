@@ -1,4 +1,7 @@
 <!--pages/detail/detail.wxml-->
+<view class="cover" wx:if="{{!isauth}}">
+  <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" class="btn_get">授权微信账号登录</button>
+</view>
 <view class="list-box">
     <view class="list-item">
         <image class="poster" lazy-load="true" src="{{actdata.actimg}}" />
@@ -25,11 +28,11 @@
            </view>
         </view>
         <button class="item_btn" bindtap="opengroup" wx:if="{{status==0 && !iscreat && isbegin && !isend}}">开团参与</button>
-        <button class="item_btn" bindtap="joingroup" wx:if="{{status==0 && iscreat && isbegin && !isend && sharekey}}">加入{{gleader}}的邀请参与抽奖</button>
+        <button class="item_btn" bindtap="joingroup" wx:if="{{status==0 && iscreat && isbegin && !isend && sharekey && !isfull}}">加入{{gleader}}的邀请参与抽奖</button>
         <button class="item_btn" bindtap="goInvite" wx:if="{{status==0 && !isfull && iscreat && isbegin && !isend && !sharekey}}">邀请朋友组队</button>
         <button class="item_btn item_btn2" wx:if="{{status==0 && !isbegin}}">活动未开始</button>
-        <button class="item_btn item_btn2" wx:if="{{status==0 && isend}}">活动已经结束</button>
-        <button class="item_btn item_btn2" wx:if="{{status==0 && isfull}}">组团成功，等待开奖</button>
+        <button class="item_btn item_btn2" wx:if="{{status==0 && isend}}">活动已结束,1~3日内公布结果</button>
+        <button class="item_btn item_btn2" wx:if="{{status==0 && isfull && !isend}}">组团成功，等待开奖</button>
         <view class='item_btime'>
             <view class="item_btime_txt" wx:if="{{status==0 && !isend && isbegin}}">距离结束开奖:{{otimes}}</view>
             <view class="item_btime_txt" wx:if="{{status==0 && !isend && !isbegin}}">距离活动开启:{{stimes}}</view>
