@@ -7,12 +7,12 @@ Page({
    * 页面的初始数据
    */
   data: {
-    openShare:false,
-    actid:null,
-    actdata:[],
-    status:0,
-    iswin:0,
-    isfull:false,
+    openShare:false, //是否打开分享弹层
+    actid:null,  //活动id
+    actdata:[],  //活动详情数据
+    status:0,    //活动状态,是否开奖(0未开奖,1开奖,2过期)
+    iswin:0,     //是否中奖
+    isfull:false,//
     otimes:0,
     stimes:0,
     isbegin:false,
@@ -24,11 +24,13 @@ Page({
     sharekey:null,
     gleader:null,
     isgetg:0,
-    isauth:false
+    isauth:0,
+    joineds:0,
+    maxjoins:0
   },
   joingroup(){
       var that = this;
-      utils.showModal('提示','入团成功后无法再加入别的团',function(res){
+      utils.showModal('提示','入团后无法加入其它团',function(res){
           if(res.confirm){
               utils.request('/api/bmsxcx/taste/login/joins',
                   {
@@ -47,7 +49,7 @@ Page({
                      })
                      return false;
                   }
-                  var _url = '../detail/detail?actid='+that.data.actid;
+                  var _url = '../detail/detail?actid='+that.data.actid+'&isauth=111';
                   wx.redirectTo({
                       url: _url
                   })
@@ -69,7 +71,8 @@ Page({
           wx.hideLoading()
           console.log(res)
           that.setData({
-            joinman: res.data
+            joinman: res.data.list,
+            joineds: res.data.joineds
           })
 
       },function(res){
@@ -79,7 +82,7 @@ Page({
   },
   opengroup(){  //开团
       var that = this;
-      utils.showModal('提示','开团成功后可以邀请好友加入,不能加入别的团',function(res){
+      utils.showModal('提示','开团后不能参与其它团',function(res){
           if(res.confirm){
               utils.request('/api/bmsxcx/taste/login/joins',
                   {
@@ -154,33 +157,34 @@ Page({
         var otime = end - now;
         var otimes = utils.getRemainderTime(otime)
         var stime = begin - now;
+
         if(res.data.groupmans.length>0){
-          var isfull = res.data.groupmans.length>=res.data.groupnum?true:false;
-          var iscreat = res.data.groupmans.length>0?true:false;
-          var iswin = res.data.groupmans[0]['iswin'];
-          that.setData({
-              isfull: isfull,
-              iscreat: iscreat,
-              iswin: iswin
-          })
+            var isfull = res.data.groupmans.length>=res.data.groupnum?true:false;
+            var iscreat = res.data.groupmans.length>0?true:false;
+            that.setData({
+                isfull: isfull,
+                iscreat: iscreat
+            })
+            for(var i=0;i<res.data.groupmans.length;i++){
+                if(res.data.groupmans[i]['jointype']==1){
+                    that.setData({
+                        gleader: res.data.groupmans[i]['username'],
+                        joinkey: res.data.groupmans[i]['groupkey']
+                    })
+                }
+                if(res.data.groupmans[i]['username']==app.globalData.userInfo.nickName){
+                    var isgetg = res.data.groupmans[i]['status'];
+                    var iswin = res.data.groupmans[i]['iswin'];
+                    that.setData({
+                        isgetg: isgetg,
+                        iswin: iswin
+                    })
+                }
+            }
         }
 
         that.checktime(begin,end)  //根据时间判断状态
 
-        for(var i=0;i<res.data.groupmans.length;i++){
-            if(res.data.groupmans[i]['jointype']==1){
-                that.setData({
-                    gleader: res.data.groupmans[i]['username'],
-                    joinkey: res.data.groupmans[i]['groupkey']
-                })
-            }
-            if(res.data.groupmans[i]['username']==app.globalData.userInfo.nickName){
-                var isgetg = res.data.groupmans[i]['status'];
-                that.setData({
-                    isgetg: isgetg
-                })
-            }
-        }
         console.log(that.data.gleader,that.data.joinkey)
 
         if(stime>0){ //未到开始时间,倒计时
@@ -220,7 +224,8 @@ Page({
             actdata: res.data,
             status: res.data.status,
             actid: res.data.id,
-            otimes: otimes
+            otimes: otimes,
+            maxjoins: res.data.maxjoins?res.data.maxjoins:0
         })
         console.log(that.data.actdata,that.data.isfull,that.data.iswin)
         that.getjoman();
@@ -296,10 +301,10 @@ Page({
      login.getuinfo(this,function(res){
           app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
           app.globalData.userInfo.nickName = res.userInfo.nickName;
-          app.globalData.userInfo.isauth = true;
+          app.globalData.userInfo.isauth = 2;
           that.setData({
             nickName: app.globalData.userInfo.nickName,
-            isauth:true
+            isauth: app.globalData.userInfo.isauth
           })
           that.getin(); //登录自身服务器
       })
@@ -310,6 +315,12 @@ Page({
         console.log(res.data.msg);
         if(res.data.status == 1){
            app.globalData.userInfo.islogin = true;
+        }else{
+            wx.showToast({
+              title: res.data.msg,
+              icon: 'none',
+              duration: 1000
+            })
         }
       })
   },
@@ -319,13 +330,14 @@ Page({
   onLoad: function (options) {
     var that = this;
     var sharekey = options.sharekey?options.sharekey:'';
-    if(app.globalData.userInfo.isauth){
-        var isauth = app.globalData.userInfo.isauth;
+    if(options.isauth){
+        that.setData({
+          isauth: options.isauth
+        })
     }
     that.setData({
       actid: options.actid,
-      sharekey: sharekey,
-      isauth: isauth
+      sharekey: sharekey
     })
     utils.showLoading("数据加载中");
     login.checksess(function(){
@@ -351,6 +363,11 @@ Page({
     wx.setNavigationBarTitle({
       title: '抽奖详情'
     })
+    if(app.globalData.userInfo.isauth){
+        this.setData({
+          isauth: app.globalData.userInfo.isauth
+        })
+    }
 
   },
   /**
@@ -371,7 +388,8 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+      this.getact()
+      wx.stopPullDownRefresh()
   },
 
   /**

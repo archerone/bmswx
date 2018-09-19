@@ -12,7 +12,7 @@ Page({
     page:0,
     size:3,
     loading:true,
-    isauth:false,
+    isauth:0,
     nickName:'',
     litems:[],
     nomore:false
@@ -37,10 +37,10 @@ Page({
      login.getuinfo(this,function(res){
           app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
           app.globalData.userInfo.nickName = res.userInfo.nickName;
-          app.globalData.userInfo.isauth = true;
+          app.globalData.userInfo.isauth = 2;
           that.setData({
             nickName: app.globalData.userInfo.nickName,
-            isauth:true
+            isauth: app.globalData.userInfo.isauth
           })
           that.getin(); //登录自身服务器
           //login.getminfo(wx.getStorageSync('thirdSession'),res.encryptedData,res.iv,res.signature,res.rawData)
@@ -53,6 +53,12 @@ Page({
                 console.log(res.data.msg);
                 app.globalData.userInfo.islogin = true;
                 that.getList();
+            }else{
+                wx.showToast({
+                  title: res.data.msg,
+                  icon: 'none',
+                  duration: 1000
+                })
             }
         })
   },

@@ -13,11 +13,11 @@
           <text class="infos_time">{{actdata.endtime}} 自动开奖</text>
         </view>
         <view class="infos_resu" wx:if="{{status==1}}">
-           <view wx:if="{{!iswin}}">
+           <view wx:if="{{iswin==0}}">
               <image src='../../assets/image/icon-failure.png' class="resu_img"></image>
               <view class="resu_txt resu_txtok">很遗憾，你未中奖</view>
            </view>
-           <view wx:if="{{iswin}}">
+           <view wx:if="{{iswin==1}}">
               <image src='../../assets/image/icon-succeed.png' class="resu_img"></image>
               <view class="resu_txt resu_txtok">恭喜你，中奖了</view>
               <view class="resu_button">
@@ -28,7 +28,7 @@
            </view>
         </view>
         <button class="item_btn" bindtap="opengroup" wx:if="{{status==0 && !iscreat && isbegin && !isend}}">开团参与</button>
-        <button class="item_btn" bindtap="joingroup" wx:if="{{status==0 && iscreat && isbegin && !isend && sharekey && !isfull}}">加入{{gleader}}的邀请参与抽奖</button>
+        <button class="item_btn" bindtap="joingroup" wx:if="{{status==0 && iscreat && isbegin && !isend && sharekey && !isfull}}">加入{{gleader}}的邀请参与抽奖{{isauth}}</button>
         <button class="item_btn" bindtap="goInvite" wx:if="{{status==0 && !isfull && iscreat && isbegin && !isend && !sharekey}}">邀请朋友组队</button>
         <button class="item_btn item_btn2" wx:if="{{status==0 && !isbegin}}">活动未开始</button>
         <button class="item_btn item_btn2" wx:if="{{status==0 && isend}}">活动已结束,1~3日内公布结果</button>
@@ -36,6 +36,17 @@
         <view class='item_btime'>
             <view class="item_btime_txt" wx:if="{{status==0 && !isend && isbegin}}">距离结束开奖:{{otimes}}</view>
             <view class="item_btime_txt" wx:if="{{status==0 && !isend && !isbegin}}">距离活动开启:{{stimes}}</view>
+        </view>
+    </view>
+    <view class="list-item2">
+        <view class="list-item2-tit">
+          <text class="item2-tit">中奖名单\n</text>
+        </view>
+        <view class="peobox">
+           <view class="peo_item" wx:for="{{actdata.groupmans}}" wx:key="{{index}}" wx:for-item="mans">
+              <image class="peo_pic" src='{{mans.avatarurl}}'></image>
+              <view class='peo_name'>{{mans.username}}</view>
+           </view>
         </view>
     </view>
     <view class="list-item2">
@@ -57,7 +68,6 @@
               <view class='peo_name peo_add'>邀请好友</view>
            </view>
         </view>
-
     </view>
     <view class="list-item3">
        <view class="item3_tit">
@@ -71,12 +81,15 @@
          开奖时间：在活动结束后的1到3日内
        </view>
        <view class="item3_info">
-         中奖规则：成功开团,并且团内人数满足{{actdata.groupnum}}人时,算做成功参与。若中奖则团内所有人都中奖。
+         活动名额：活动上限为{{maxjoins}}人,当前人数为{{joineds}}
+       </view>
+       <view class="item3_info">
+         中奖规则：成功开团,并且团内人数满足{{actdata.groupnum}}人时,算做成功参与。用户只能加入一个团,若中奖则团内所有人都中奖。
        </view>
     </view>
     <view class="list-item4">
         <view class="item4_tit">
-          已有{{joinman.length}}人参与
+          最近参与用户
         </view>
         <view class="item4_box" wx:for="{{joinman}}" wx:key="index" wx:for-item="joindata">
           <image class="item4_peo" src="{{joindata.avatarurl}}"></image>
