@@ -2,6 +2,7 @@
 .cover{width:100%;height:100%;background:rgba(0,0,0,0.6);position:fixed;z-index:20;}
 .btn_get{width:200rpx;height:100rpx;background:red;}
 
+.gohome{ width:30rpx;height:140rpx;font-size:24rpx;padding:10rpx;background:red;position:fixed;left:-3rpx;top:40%;z-index:10;background:#fff;border:3rpx solid #546bff;border-left:none;border-radius:10rpx;color:#546bff;}
 .list-box{ width:698rpx;height:100%;padding:30rpx 26rpx 0;background:#f6f7f9;}
 .list-item{ width:698rpx;background:#fff;border-radius:10px;margin-bottom:35rpx;position:relative;padding-bottom:50px;}
 .list-item .poster{width:100%;height:341rpx;border-radius:10rpx;margin-bottom:10rpx;}
@@ -19,8 +20,9 @@
 .item2-tit{color:#353535;font-size:30rpx;margin-bottom:5rpx;}
 .item2-txt{color:#aaaaaa;font-size:24rpx;}
 .peobox{ width:600rpx;height:420rpx;margin:48rpx auto 0;}
-.peo_item{ width:200rpx;height:160rpx;float:left;margin-bottom:45rpx;text-align: center;}
+.peo_item{ width:200rpx;height:160rpx;float:left;margin-bottom:45rpx;text-align: center;position:relative;}
 .peo_pic{width:105rpx;height:105rpx;}
+.peo_tz{width:105rpx;height:105rpx;border:2rpx solid #ffcf04;position:absolute;left:48rpx;top:-1rpx;color:#ffcf04;font-size:22rpx;}
 .peo_name{width:175rpx;height:30rpx;overflow:hidden;font-size: 22rpx;color: #aaa;margin:0 auto;white-space: nowrap;text-overflow: ellipsis;}
 .peo_add{color:#546bff;}
 .list-item3{width:698rpx;background:#fff;border-radius:10px;margin-bottom:35rpx;overflow:hidden;padding-bottom:40rpx;}

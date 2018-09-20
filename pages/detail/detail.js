@@ -12,23 +12,30 @@ Page({
     actdata:[],  //活动详情数据
     status:0,    //活动状态,是否开奖(0未开奖,1开奖,2过期)
     iswin:0,     //是否中奖
-    isfull:false,//
-    otimes:0,
-    stimes:0,
-    isbegin:false,
-    isend:false,
-    iscreat:false,
-    actid:null,
-    joinman:[],
-    joinkey:null,
-    sharekey:null,
-    gleader:null,
-    isgetg:0,
-    isauth:0,
-    joineds:0,
-    maxjoins:0
+    isfull:false,//团是否满员
+    otimes:0,    //距离结束开奖时间
+    stimes:0,    //距离活动开始时间
+    isbegin:false,  //活动是否开始
+    isend:false,    //活动是否结束
+    iscreat:false,  //当前用户是否已开团
+    actid:null,     //活动id
+    joinman:[],     //最新参与的8个用户
+    joinkey:null,   //分享时带的参数
+    sharekey:null,  //接收到的分享参数
+    gleader:null,   //团长
+    isgetg:0,       //是否领取
+    isauth:0,       //是否授权微信登录
+    joineds:0,      //活动当前参与人数
+    maxjoins:0,     //活动最大人数上限
+    winmans:[],     //中奖名单
+    actname:null    //奖项名称
   },
-  joingroup(){
+  gohome(){ //返回主页
+      wx.switchTab({
+          url: '../index/index'
+      })
+  },
+  joingroup(){ //加入团队
       var that = this;
       utils.showModal('提示','入团后无法加入其它团',function(res){
           if(res.confirm){
@@ -158,6 +165,11 @@ Page({
         var otimes = utils.getRemainderTime(otime)
         var stime = begin - now;
 
+        if(res.data.status==1){
+            that.setData({
+                winmans:res.data.winmans
+            })
+        }
         if(res.data.groupmans.length>0){
             var isfull = res.data.groupmans.length>=res.data.groupnum?true:false;
             var iscreat = res.data.groupmans.length>0?true:false;
@@ -184,8 +196,6 @@ Page({
         }
 
         that.checktime(begin,end)  //根据时间判断状态
-
-        console.log(that.data.gleader,that.data.joinkey)
 
         if(stime>0){ //未到开始时间,倒计时
             var time = null;
@@ -225,6 +235,7 @@ Page({
             status: res.data.status,
             actid: res.data.id,
             otimes: otimes,
+            actname: res.data.actname,
             maxjoins: res.data.maxjoins?res.data.maxjoins:0
         })
         console.log(that.data.actdata,that.data.isfull,that.data.iswin)
@@ -248,7 +259,7 @@ Page({
   },
   gosharePic: function () {  //跳转至画图页面
     wx.navigateTo({
-      url: '../sharepic/sharepic'
+      url: '../sharepic/sharepic?imgurl='+this.data.actdata.actimg+'&actname='+this.data.actname+'&endtime='+this.data.actdata.endtime
     })
     this.hideModal();
   },
@@ -256,8 +267,7 @@ Page({
     var _this = this;
     this.showModal();
   },
-  showModal: function () {
-    // 显示遮罩层
+  showModal: function () {  // 显示遮罩层
     var animation = wx.createAnimation({
       duration: 200,
       timingFunction: "linear",
@@ -276,8 +286,7 @@ Page({
       })
     }.bind(this), 200)
   },
-  hideModal: function () {
-    // 隐藏遮罩层
+  hideModal: function () {  // 隐藏遮罩层
     var animation = wx.createAnimation({
       duration: 200,
       timingFunction: "linear",
@@ -296,7 +305,7 @@ Page({
       })
     }.bind(this), 200)
   },
-  getUserInfo: function () {
+  getUserInfo: function () {   //获取微信用户信息
      var that = this;
      login.getuinfo(this,function(res){
           app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
@@ -306,10 +315,10 @@ Page({
             nickName: app.globalData.userInfo.nickName,
             isauth: app.globalData.userInfo.isauth
           })
-          that.getin(); //登录自身服务器
+          that.getin();
       })
   },
-  getin:function(){
+  getin:function(){  //登录活动服务器
       var that = this;
       login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
         console.log(res.data.msg);
@@ -340,13 +349,17 @@ Page({
       sharekey: sharekey
     })
     utils.showLoading("数据加载中");
-    login.checksess(function(){
-        login.gologin(function(){
+    if(!app.globalData.userInfo.islogin){
+        login.checksess(function(){
+            login.gologin(function(){
+                that.getact();
+            });
+        },function(){
             that.getact();
-        });
-    },function(){
-        that.getact();
-    })
+        })
+    }else{
+       that.getact();
+    }
   },
 
   /**

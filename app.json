@@ -6,7 +6,7 @@
     "pages/user/user",
     "pages/subject-list/subject-list",
     "pages/history-list/history-list",
-    "pages/share/share"
+    "pages/sharepic/sharepic"
   ],
   "window": {
     "navigationBarBackgroundColor": "#006554",

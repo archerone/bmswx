@@ -2,12 +2,14 @@
 <view class="cover" wx:if="{{!isauth}}">
   <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" class="btn_get">授权微信账号登录</button>
 </view>
+<view class="gohome" bindtap="gohome">返回首页</view>
 <view class="list-box">
     <view class="list-item">
         <image class="poster" lazy-load="true" src="{{actdata.actimg}}" />
         <view class="infos">
           <view class="infos_text">奖品:{{actdata.actname}}</view>
-          <view class="infos_ico">拼团</view>
+          <view class="infos_ico" wx:if="{{actdata.actype==1}}">拼团</view>
+          <view class="infos_ico" wx:if="{{actdata.actype==2}}">问卷</view>
         </view>
         <view class="infos">
           <text class="infos_time">{{actdata.endtime}} 自动开奖</text>
@@ -28,7 +30,7 @@
            </view>
         </view>
         <button class="item_btn" bindtap="opengroup" wx:if="{{status==0 && !iscreat && isbegin && !isend}}">开团参与</button>
-        <button class="item_btn" bindtap="joingroup" wx:if="{{status==0 && iscreat && isbegin && !isend && sharekey && !isfull}}">加入{{gleader}}的邀请参与抽奖{{isauth}}</button>
+        <button class="item_btn" bindtap="joingroup" wx:if="{{status==0 && iscreat && isbegin && !isend && sharekey && !isfull}}">加入{{gleader}}的团参与抽奖</button>
         <button class="item_btn" bindtap="goInvite" wx:if="{{status==0 && !isfull && iscreat && isbegin && !isend && !sharekey}}">邀请朋友组队</button>
         <button class="item_btn item_btn2" wx:if="{{status==0 && !isbegin}}">活动未开始</button>
         <button class="item_btn item_btn2" wx:if="{{status==0 && isend}}">活动已结束,1~3日内公布结果</button>
@@ -38,12 +40,12 @@
             <view class="item_btime_txt" wx:if="{{status==0 && !isend && !isbegin}}">距离活动开启:{{stimes}}</view>
         </view>
     </view>
-    <view class="list-item2">
+    <view class="list-item2" wx:if="{{status!=0}}">
         <view class="list-item2-tit">
           <text class="item2-tit">中奖名单\n</text>
         </view>
         <view class="peobox">
-           <view class="peo_item" wx:for="{{actdata.groupmans}}" wx:key="{{index}}" wx:for-item="mans">
+           <view class="peo_item" wx:for="{{winmans}}" wx:key="{{index}}" wx:for-item="mans">
               <image class="peo_pic" src='{{mans.avatarurl}}'></image>
               <view class='peo_name'>{{mans.username}}</view>
            </view>
@@ -99,7 +101,7 @@
 <view class="commodity_screen" bindtap="hideModal" wx:if="{{openShare}}"></view>
 <view animation="{{animationData}}" class="commodity_attr_box" wx:if="{{openShare}}">
   <button open-type="share" class="sharebtn">邀请微信好友</button>
-  <button class="sharebtn" bindtap="gosharePic">生成分享图片</button>
+  <button class="sharebtn" wx:if="{{isbegin && !isend}}" bindtap="gosharePic">生成分享图片</button>
   <button class="sharecal" bindtap="hideModal">取消</button>
 </view>
 
