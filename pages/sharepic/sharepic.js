@@ -9,7 +9,9 @@ Page({
   data: {
     shareImgurl:null,
     imgurl:null,
-    endtime:null
+    endtime:null,
+    actid:null,
+    sharekey:null
   },
   saveimg:function(){
     wx.canvasToTempFilePath({
@@ -45,7 +47,9 @@ Page({
         this.setData({
             imgurl: opts.imgurl,
             actname: opts.actname,
-            endtime: opts.endtime
+            endtime: opts.endtime,
+            actid: opts.actid,
+            sharekey: opts.sharekey
         })
       }
   },
@@ -151,33 +155,47 @@ Page({
       })
     });
     //二维码
-    wx.request({
-      url: 'https://api.weixin.qq.com/cgi-bin/token',
-      method: 'GET',
-      data: {
-        appid: 'wxd40ba3259097c636',
-        secret: 'b8c4a93fcdd267e33914625a19f9ffd5',
-        grant_type:'client_credential'
-      },
-      success: function (res) {
-        var _url = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=' + res.data.access_token;
-        wx.request({
-          url: _url,
-          method: 'POST',
-          data: {
-            scene:'id=1',
-            width: 430,
-            path: "pages/detail/detail"
-          },
-          success: function (res) {
-            console.log(res)
-            _this.setData({
-              //shareImgurl: sdata
-            });
-          }
-        })
-      }
-    })
+    utils.request('/api/bmsxcx/taste/login/getqcode',
+        {
+          actid: _this.data.actid,
+          sharekey: _this.data.sharekey
+        },
+        "POST", 2, function (res) {
+        wx.hideLoading()
+        _this.setData({
+            shareImgurl: res.data
+        });
+    },function(res){
+        wx.hideLoading()
+        //utils.showModal('提示', res.errMsg,false);
+    });
+    // wx.request({
+    //   url: 'https://api.weixin.qq.com/cgi-bin/token',
+    //   method: 'GET',
+    //   data: {
+    //     appid: 'wxd40ba3259097c636',
+    //     secret: 'b8c4a93fcdd267e33914625a19f9ffd5',
+    //     grant_type:'client_credential'
+    //   },
+    //   success: function (res) {
+    //     var _url = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=' + res.data.access_token;
+    //     wx.request({
+    //       url: _url,
+    //       method: 'POST',
+    //       data: {
+    //         scene:'id=1',
+    //         width: 430,
+    //         path: "pages/detail/detail"
+    //       },
+    //       success: function (res) {
+    //         console.log(res)
+    //         _this.setData({
+    //           //shareImgurl: sdata
+    //         });
+    //       }
+    //     })
+    //   }
+    // })
     Promise.all([p2,p3]).then(function (datas) {
       console.log(datas)
       ctx.setTextAlign('center')    // 文字居中

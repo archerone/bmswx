@@ -259,7 +259,7 @@ Page({
   },
   gosharePic: function () {  //跳转至画图页面
     wx.navigateTo({
-      url: '../sharepic/sharepic?imgurl='+this.data.actdata.actimg+'&actname='+this.data.actname+'&endtime='+this.data.actdata.endtime
+      url: '../sharepic/sharepic?imgurl='+this.data.actdata.actimg+'&actname='+this.data.actname+'&endtime='+this.data.actdata.endtime+'&actid='+this.data.actid+'&sharekey='+this.data.joinkey
     })
     this.hideModal();
   },
