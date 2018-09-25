@@ -6,11 +6,12 @@
     "pages/user/user",
     "pages/subject-list/subject-list",
     "pages/history-list/history-list",
-    "pages/sharepic/sharepic"
+    "pages/sharepic/sharepic",
+    "pages/gprize/gprize"
   ],
   "window": {
-    "navigationBarBackgroundColor": "#006554",
-    "navigationBarTextStyle": "#bfd730",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTextStyle": "black",
     "navigationBarTitleText": "贝美森健康体验",
     "backgroundColor": "#eeeeee",
     "backgroundTextStyle": "light",

@@ -23,9 +23,9 @@
               <image src='../../assets/image/icon-succeed.png' class="resu_img"></image>
               <view class="resu_txt resu_txtok">恭喜你，中奖了</view>
               <view class="resu_button">
-                 <button class="resu_btn resu_btn1" wx:if="{{isgetg==0}}">立即领奖</button>
+                 <button class="resu_btn resu_btn1" wx:if="{{isgetg==0}}" bindtap="getprize">立即领奖</button>
                  <button class="resu_btn resu_btn1 resu_btn11" wx:if="{{isgetg==1}}">已领取</button>
-                 <button class="resu_btn resu_btn2">炫耀一下</button>
+                 <button class="resu_btn resu_btn2" bindtap="gosharePic" data-ishow="2">炫耀一下</button>
               </view>
            </view>
         </view>
@@ -101,7 +101,7 @@
 <view class="commodity_screen" bindtap="hideModal" wx:if="{{openShare}}"></view>
 <view animation="{{animationData}}" class="commodity_attr_box" wx:if="{{openShare}}">
   <button open-type="share" class="sharebtn">邀请微信好友</button>
-  <button class="sharebtn" wx:if="{{isbegin && !isend}}" bindtap="gosharePic">生成分享图片</button>
+  <button class="sharebtn" wx:if="{{isbegin && !isend}}" bindtap="gosharePic" data-ishow="1">生成分享图片</button>
   <button class="sharecal" bindtap="hideModal">取消</button>
 </view>
 

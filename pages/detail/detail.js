@@ -35,6 +35,11 @@ Page({
           url: '../index/index'
       })
   },
+  getprize(){  //跳至领奖页面
+      wx.navigateTo({
+          url: '../gprize/gprize'
+      })
+  },
   joingroup(){ //加入团队
       var that = this;
       utils.showModal('提示','入团后无法加入其它团',function(res){
@@ -257,9 +262,16 @@ Page({
           })
       }
   },
-  gosharePic: function () {  //跳转至画图页面
+  gosharePic: function (e) {  //跳转至画图页面
+    console.log('dddddd',e.currentTarget.dataset.ishow)
+    if(e.currentTarget.dataset.ishow==2){
+      var _url = '../sharepic/sharepic?imgurl='+this.data.actdata.actimg+'&actname='+this.data.actname+'&sharetype=2';
+    }else{
+      var _url = '../sharepic/sharepic?imgurl='+this.data.actdata.actimg+'&actname='+this.data.actname+'&endtime='+this.data.actdata.endtime+'&actid='+this.data.actid+'&sharekey='+this.data.joinkey+'&sharetype=1';
+    }
+
     wx.navigateTo({
-      url: '../sharepic/sharepic?imgurl='+this.data.actdata.actimg+'&actname='+this.data.actname+'&endtime='+this.data.actdata.endtime+'&actid='+this.data.actid+'&sharekey='+this.data.joinkey
+      url: _url
     })
     this.hideModal();
   },

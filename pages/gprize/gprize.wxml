@@ -1,0 +1,12 @@
+<!--pages/gprize.wxml-->
+<view class="box">
+	<image src="../../assets/image/bg-dot.png" class="bg"></image>
+	<view class="prize_box">
+	  <image src="../../assets/image/icon-badge.png" class="icon_1"></image>
+	  <view class="tit">立即领奖</view>
+	  <view class="info">请联系客服微信号: <text>xiaoar7</text>登记收货地址，我们会尽快为您安排发货</view>
+	</view>
+	<image src="../../assets/image/keqcode.jpg" class="kf"></image>
+	<view class="kf_t">官方客服二维码</view>
+	<button class="item_btn" bindtap="gohome">完成</button>
+</view>

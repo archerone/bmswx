@@ -1,2 +1,2 @@
 /* pages/sharepic/sharepic.wxss */
-.savepic{width:698rpx;height:82rpx;line-height:82rpx;position: absolute;bottom:30rpx;left:25rpx;z-index: 1;border-radius:60rpx;}
+.savepic{width:698rpx;height:82rpx;line-height:82rpx;color:#353535;position: absolute;bottom:30rpx;left:25rpx;z-index: 1;}
