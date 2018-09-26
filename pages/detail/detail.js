@@ -385,9 +385,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    wx.setNavigationBarTitle({
-      title: '抽奖详情'
-    })
     if(app.globalData.userInfo.isauth){
         this.setData({
           isauth: app.globalData.userInfo.isauth

@@ -8,10 +8,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    movies:[],
     page:0,
     size:3,
-    loading:true,
     isauth:0,
     nickName:'',
     litems:[],
@@ -82,6 +80,14 @@ Page({
           const litems = that.data.litems;
 
           for(let i=0;i<data.length;i++){
+              var now = new Date().getTime();
+              var res_endtime = data[i].endtime.replace(/\-/g, "/");
+              var end = new Date(res_endtime).getTime();
+              data[i]['isend'] = false;
+              if(now>=end || data[i].status!=0){ //活动时间过了，或者状态不为未开奖
+                  data[i]['isend'] = true;
+                  console.log(data[i])
+              }
               litems.push(data[i]);
           }
 

@@ -5,26 +5,8 @@
     <image class="avatar" src="{{avatarUrl}}"></image>
     <text class="name">{{nickName}}</text>
   </view>
-  <view class="share" bindtap="gotoShare">
-    <text>分享小程序</text>
-    <image src="/assets/image/more.png" mode="aspectFit"></image>
-  </view>
-
-  <view class="history" bindtap="gotoHistory">
-    <text>观看历史</text>
-    <image src="/assets/image/more.png" mode="aspectFit"></image>
-  </view>
-  <view class="history-list" wx:if="{{movies.length}}">
-
-    <view class="movie-item" wx:for="{{movies}}" wx:key="{{item._id}}" bindtap="gotoDetail" data-movie-data="{{item}}">
-      <image class="poster" mode="widthFix" lazy-load="true" src="{{item.poster}}" />
-      <view class="title">
-        <text>{{item.title}} <text class="rate">{{item.rate}}</text></text>
-      </view>
-      <view class="year-type">
-        <text>{{item.types}} / {{item.year}}</text>
-      </view>
-    </view>
-
+  <view class="listwrap">
+    <text class="listab" data-actid="{{joinactid}}" data-tid="1" bindtap="gotoDetail">{{joinlist['length']}}\n<text>已参与</text></text>|
+    <text class="listab" data-actid="{{winactid}}" data-tid="2" bindtap="gotoDetail">{{winlist['length']}}\n<text>中奖纪录</text></text>
   </view>
 </view>

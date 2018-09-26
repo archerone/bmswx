@@ -366,7 +366,7 @@ Page({
       this.showtime();
     }else{
       wx.setNavigationBarTitle({
-        title: '抽奖详情'
+        title: '分享抽奖'
       })
       this.getqcode();
     }

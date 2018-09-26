@@ -13,7 +13,8 @@
         <view class="infos">
           <text class="infos_time">{{litemData.begintime}} 自动开奖</text>
         </view>
-        <image class="isjoin" wx:if="{{litemData.isjoin}}" src="../../assets/image/icon-tag.png"></image>
+        <image class="isjoin" wx:if="{{litemData.isjoin && !litemData.isend}}" src="../../assets/image/icon-tag.png"></image>
+        <image class="isjoin" wx:if="{{litemData.isend}}" src="../../assets/image/icon-tag2.png"></image>
     </view>
   </scroll-view>
 </view>

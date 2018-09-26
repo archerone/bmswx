@@ -1,11 +1,11 @@
 {
   "pages": [
+    "pages/user/user",
     "pages/index/index",
     "pages/detail/detail",
     "pages/subject/subject",
-    "pages/user/user",
     "pages/subject-list/subject-list",
-    "pages/history-list/history-list",
+    "pages/mylist/mylist",
     "pages/sharepic/sharepic",
     "pages/gprize/gprize"
   ],
