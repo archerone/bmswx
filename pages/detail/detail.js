@@ -27,7 +27,8 @@ Page({
     joineds:0,      //活动当前参与人数
     maxjoins:0,     //活动最大人数上限
     winmans:[],     //中奖名单
-    actname:null    //奖项名称
+    actname:null,    //奖项名称
+    islogin:false
   },
   gohome(){ //返回主页
       wx.switchTab({
@@ -412,7 +413,9 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-      this.getact()
+      if(this.data.islogin){
+        this.getact()
+      }
       wx.stopPullDownRefresh()
   },
 

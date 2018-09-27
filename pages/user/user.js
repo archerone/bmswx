@@ -9,7 +9,7 @@ Page({
    */
   data: {
     avatarUrl:"https://res.beimsn.com/xcx/noavar.png",
-    nickName:'未知',
+    nickName:'未登录',
     winlist: [],
     joinlist:[],
     winactid:[],
@@ -46,37 +46,44 @@ Page({
           },
           "POST", 2, function (res) {
           wx.hideLoading()
+          if(res.data.length>0){
+              for(var i=0;i<res.data.length;i++){
+                if(res.data[i]['iswin']==1){
+                  var winlist = that.data.winlist;
+                  var winactid = that.data.winactid;
+                  winlist.push(res.data[i]);
+                  winactid.push(res.data[i]['actid'])
+                  that.setData({
+                    winlist:winlist,
+                    winactid:winactid
+                  });
+                }else{
+                  var joinlist = that.data.joinlist;
+                  var joinactid = that.data.joinactid;
+                  joinlist.push(res.data[i]);
+                  joinactid.push(res.data[i]['actid'])
+                  that.setData({
+                    joinlist:joinlist,
+                    joinactid:joinactid
+                  });
+                }
 
-          for(var i=0;i<res.data.length;i++){
-            if(res.data[i]['iswin']==1){
-              var winlist = that.data.winlist;
-              var winactid = that.data.winactid;
-              winlist.push(res.data[i]);
-              winactid.push(res.data[i]['actid'])
-              that.setData({
-                winlist:winlist,
-                winactid:winactid
-              });
-            }else{
-              var joinlist = that.data.joinlist;
-              var joinactid = that.data.joinactid;
-              joinlist.push(res.data[i]);
-              joinactid.push(res.data[i]['actid'])
-              that.setData({
-                joinlist:joinlist,
-                joinactid:joinactid
-              });
-            }
+              }
 
+              app.globalData.userInfo.avatarUrl = res.data[0]['avatarurl'];
+              app.globalData.userInfo.nickName = res.data[0]['username']
+              that.setData({
+                  avatarUrl: res.data[0]['avatarurl'],
+                  nickName: res.data[0]['username']
+              })
+              console.log(that.data.joinlist)
+          }else{
+              that.setData({
+                  avatarUrl: 'https://res.beimsn.com/xcx/noavar.png',
+                  nickName: '未登录'
+              })
           }
-
-          app.globalData.userInfo.avatarUrl = res.data[0]['avatarurl'];
-          app.globalData.userInfo.nickName = res.data[0]['username']
-          that.setData({
-              avatarUrl: res.data[0]['avatarurl'],
-              nickName: res.data[0]['username']
-          })
-          console.log(that.data.joinlist)
+          
 
 
       },function(res){
@@ -105,11 +112,31 @@ Page({
           that.getin();
      }
   },
+  getin:function(){  //登录活动服务器
+      var that = this;
+      login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
+        if(res.data.status == 1){
+            that.getuact()
+        }else{
+            wx.showToast({
+              title: res.data.msg,
+              icon: 'none',
+              duration: 1000
+            })
+        }
+      })
+  },
   checklogin(){
      var that = this;
      if(!wx.getStorageSync('thirdSession')){
         that.setData({
-          islogin: false
+          islogin: false,
+          avatarUrl: 'https://res.beimsn.com/xcx/noavar.png',
+          nickName: '未登录',
+          joinlist:[],
+          winlist:[],
+          winactid:[],
+          joinactid:[]
         })
      }else{
         utils.showLoading("数据加载中");
@@ -120,7 +147,13 @@ Page({
             that.getuact();
          },function(){
             that.setData({
-              islogin: false
+              islogin: false,
+              avatarUrl: 'https://res.beimsn.com/xcx/noavar.png',
+              nickName: '未登录',
+              joinlist:[],
+              winlist:[],
+              winactid:[],
+              joinactid:[]
             })
          })
      }
@@ -148,7 +181,9 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.getuact()
+    if(this.data.islogin){
+        this.getuact()
+    }
     wx.stopPullDownRefresh()
   },
 

@@ -9,5 +9,5 @@
     <text class="listab" data-actid="{{joinactid}}" data-tid="1" bindtap="gotoDetail">{{joinlist['length']}}\n<text>已参与</text></text>|
     <text class="listab" data-actid="{{winactid}}" data-tid="2" bindtap="gotoDetail">{{winlist['length']}}\n<text>中奖纪录</text></text>
   </view>
-  <button class="item_btn" bindtap="wxlogin" wx:if="{{!islogin}}">请登录</button>
+  <button open-type="getUserInfo" class="item_btn" bindgetuserinfo="wxlogin" wx:if="{{!islogin}}">微信登录</button>
 </view>

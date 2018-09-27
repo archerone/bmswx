@@ -19,6 +19,34 @@ Page({
       url: '../subject/subject'
     })
   },
+  checklogin(){
+     var that = this;
+     if(!wx.getStorageSync('thirdSession')){
+        that.setData({
+          islogin: false
+        })
+     }else{
+        utils.showLoading("数据加载中");
+        login.checkwxse(function(){
+            that.setData({
+              islogin: true
+            })
+            if(that.data.isplayer){
+                that.setData({
+                    page: 0,
+                    nomore:false,
+                    sublist:[]
+                })
+                that.getList();
+            }
+         },function(){
+            that.setData({
+              islogin: false
+            })
+         })
+     }
+     console.log(this.data.islogin)
+  },
   /**
    * 生命周期函数--监听页面加载
    */
@@ -26,6 +54,7 @@ Page({
       this.setData({
         type:opts.type
       })
+      console.log('load')
       this.getList();
   },
 
@@ -53,6 +82,15 @@ Page({
   },
   getList(){
       var that = this;
+      if(wx.getStorageSync('thirdSession')){
+          that.setData({
+            isplayer:false
+          })
+      }else{
+          that.setData({
+            isplayer:true
+          })
+      }
       utils.request('/api/bmsxcx/taste/list/getActlist',
           {
             num: that.data.page,
@@ -113,21 +151,6 @@ Page({
         wx.setNavigationBarTitle({
           title: '活动分类-问卷测试列表'
         })
-      }
-      if(wx.getStorageSync('thirdSession')){
-          that.setData({
-            isplayer:false
-          })
-          that.setData({
-              page: 0,
-              nomore:false,
-              sublist:[]
-          })
-          that.getList();
-      }else{
-          that.setData({
-            isplayer:true
-          })
       }
   },
 
