@@ -55,4 +55,5 @@ page {
   font-size:26rpx;
   color:#bbbbbb;
 }
+.item_btn{width:638rpx;height:82rpx;background:#546bff;line-height:81rpx;color:#fff;font-size:30rpx;border-radius:55rpx;margin-top:75rpx;box-shadow: 0px 0px 15rpx #c4cbff;}
 

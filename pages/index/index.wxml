@@ -1,5 +1,5 @@
-<view class="cover" wx:if="{{!isauth}}">
-	<button open-type="getUserInfo" bindgetuserinfo="getUserInfo" class="btn_get">授权微信账号登录</button>
+<view class="cover" wx:if="{{false}}">
+	<button open-type="getUserInfo" bindgetuserinfo="wxlogin" class="btn_get">微信登录</button>
 </view>
 <view class="list-box">
   <scroll-view scroll-y="true" lower-threshold="200" style='height:100%' bindscrolltolower="scrollmore">

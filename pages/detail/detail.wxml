@@ -1,8 +1,8 @@
 <!--pages/detail/detail.wxml-->
-<view class="cover" wx:if="{{!isauth}}">
-  <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" class="btn_get">授权微信账号登录</button>
+<view class="cover" wx:if="{{islogin==false}}">
+  <button open-type="getUserInfo" bindgetuserinfo="wxlogin" class="btn_get">授权微信账号登录</button>
 </view>
-<view class="gohome" bindtap="gohome">返回首页</view>
+<view class="gohome" bindtap="gohome" wx:if="{{sharekey}}">返回首页</view>
 <view class="list-box">
     <view class="list-item">
         <image class="poster" lazy-load="true" src="{{actdata.actimg}}" />

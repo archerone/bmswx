@@ -24,7 +24,6 @@ Page({
     sharekey:null,  //接收到的分享参数
     gleader:null,   //团长
     isgetg:0,       //是否领取
-    isauth:0,       //是否授权微信登录
     joineds:0,      //活动当前参与人数
     maxjoins:0,     //活动最大人数上限
     winmans:[],     //中奖名单
@@ -61,7 +60,7 @@ Page({
                      })
                      return false;
                   }
-                  var _url = '../detail/detail?actid='+that.data.actid+'&isauth=111';
+                  var _url = '../detail/detail?actid='+that.data.actid;
                   wx.redirectTo({
                       url: _url
                   })
@@ -152,7 +151,16 @@ Page({
               "POST", 2, function (res) {
               wx.hideLoading()
               console.log(res)
-              that.initact(res);
+              if(res.data.rescode==0){
+                  wx.showToast({
+                      title: res.data.msg,
+                      icon: 'none',
+                      duration: 2000
+                  })
+              }else{
+                  that.initact(res);
+              }
+
           },function(res){
               wx.hideLoading()
               //utils.showModal('提示', res.errMsg,false);
@@ -317,25 +325,39 @@ Page({
       })
     }.bind(this), 200)
   },
-  getUserInfo: function () {   //获取微信用户信息
+  checklogin(){
      var that = this;
-     login.getuinfo(this,function(res){
-          app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
-          app.globalData.userInfo.nickName = res.userInfo.nickName;
-          app.globalData.userInfo.isauth = 2;
-          that.setData({
-            nickName: app.globalData.userInfo.nickName,
-            isauth: app.globalData.userInfo.isauth
-          })
+     if(!wx.getStorageSync('thirdSession')){
+        that.setData({
+          islogin: false
+        })
+     }else{
+        utils.showLoading("数据加载中");
+        login.checkwxse(function(){
+            that.setData({
+              islogin: true
+            })
+         },function(){
+            that.setData({
+              islogin: false
+            })
+         })
+     }
+  },
+  wxlogin(){
+     var that = this;
+     if(!that.data.islogin){
+          login.wxlogin(that)
+      }else{
           that.getin();
-      })
+      }
   },
   getin:function(){  //登录活动服务器
       var that = this;
       login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
         console.log(res.data.msg);
         if(res.data.status == 1){
-           app.globalData.userInfo.islogin = true;
+            that.getact();
         }else{
             wx.showToast({
               title: res.data.msg,
@@ -351,27 +373,12 @@ Page({
   onLoad: function (options) {
     var that = this;
     var sharekey = options.sharekey?options.sharekey:'';
-    if(options.isauth){
-        that.setData({
-          isauth: options.isauth
-        })
-    }
     that.setData({
       actid: options.actid,
       sharekey: sharekey
     })
     utils.showLoading("数据加载中");
-    if(!app.globalData.userInfo.islogin){
-        login.checksess(function(){
-            login.gologin(function(){
-                that.getact();
-            });
-        },function(){
-            that.getact();
-        })
-    }else{
-       that.getact();
-    }
+    that.getact();
   },
 
   /**
@@ -385,12 +392,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    if(app.globalData.userInfo.isauth){
-        this.setData({
-          isauth: app.globalData.userInfo.isauth
-        })
-    }
-
+    this.checklogin()
   },
   /**
    * 生命周期函数--监听页面隐藏

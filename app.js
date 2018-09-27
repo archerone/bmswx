@@ -38,8 +38,7 @@ App({
   globalData: {
     userInfo: {
       avatarUrl:null,
-      nickName:null,
-      isauth:0
+      nickName:null
     }
   },
   //从后台进入前台

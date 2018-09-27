@@ -8,12 +8,13 @@ Page({
    * 页面的初始数据
    */
   data: {
-    avatarUrl:"",
+    avatarUrl:"https://res.beimsn.com/xcx/noavar.png",
     nickName:'未知',
     winlist: [],
     joinlist:[],
     winactid:[],
-    joinactid:[]
+    joinactid:[],
+    islogin:false
   },
 
   gotoShare() {
@@ -21,7 +22,9 @@ Page({
       url: '../share/share',
     })
   },
+  gologin(){
 
+  },
   gotoDetail(e) {
     const { actid } = e.currentTarget.dataset
     const { tid } = e.currentTarget.dataset
@@ -66,6 +69,13 @@ Page({
             }
 
           }
+
+          app.globalData.userInfo.avatarUrl = res.data[0]['avatarurl'];
+          app.globalData.userInfo.nickName = res.data[0]['username']
+          that.setData({
+              avatarUrl: res.data[0]['avatarurl'],
+              nickName: res.data[0]['username']
+          })
           console.log(that.data.joinlist)
 
 
@@ -87,18 +97,37 @@ Page({
   onReady: function () {
 
   },
+  wxlogin(){
+     var that = this;
+     if(!that.data.islogin){
+          login.wxlogin(that)
+     }else{
+          that.getin();
+     }
+  },
+  checklogin(){
+     var that = this;
+     if(!wx.getStorageSync('thirdSession')){
+        that.setData({
+          islogin: false
+        })
+     }else{
+        utils.showLoading("数据加载中");
+        login.checkwxse(function(){
+            that.setData({
+              islogin: true
+            })
+            that.getuact();
+         },function(){
+            that.setData({
+              islogin: false
+            })
+         })
+     }
+  },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow: function () {
-    if (app.globalData.userInfo.avatarUrl) {
-      this.setData({
-        avatarUrl: app.globalData.userInfo.avatarUrl,
-        nickName: app.globalData.userInfo.nickName
-      });
-      this.getuact();
-    }
+    this.checklogin()
   },
 
   /**

@@ -10,10 +10,39 @@ Page({
   data: {
     page:0,
     size:3,
-    isauth:0,
     nickName:'',
     litems:[],
-    nomore:false
+    nomore:false,
+    islogin:false,
+    isplayer:true  //是否是游客状态
+  },
+  checklogin(){
+     var that = this;
+     if(!wx.getStorageSync('thirdSession')){
+        that.setData({
+          islogin: false
+        })
+     }else{
+        utils.showLoading("数据加载中");
+        login.checkwxse(function(){
+            that.setData({
+              islogin: true
+            })
+            if(that.data.isplayer){
+                that.setData({
+                    page: 0,
+                    nomore:false,
+                    litems:[]
+                })
+                that.getList();
+            }
+         },function(){
+            that.setData({
+              islogin: false
+            })
+         })
+     }
+     console.log(this.data.islogin)
   },
   scrollmore(){
     if(this.data.nomore){
@@ -30,26 +59,19 @@ Page({
     });
     this.getList();
   },
-  getUserInfo: function () {
+  wxlogin(){
      var that = this;
-     login.getuinfo(this,function(res){
-          app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
-          app.globalData.userInfo.nickName = res.userInfo.nickName;
-          app.globalData.userInfo.isauth = 2;
-          that.setData({
-            nickName: app.globalData.userInfo.nickName,
-            isauth: app.globalData.userInfo.isauth
-          })
-          that.getin(); //登录自身服务器
-          //login.getminfo(wx.getStorageSync('thirdSession'),res.encryptedData,res.iv,res.signature,res.rawData)
-     })
+     if(!that.data.islogin){
+          login.wxlogin(that)
+      }else{
+          that.getin();
+      }
   },
   getin:function(){
         var that = this;
         login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
             if(res.data.status == 1){
                 console.log(res.data.msg);
-                app.globalData.userInfo.islogin = true;
                 that.getList();
             }else{
                 wx.showToast({
@@ -62,6 +84,15 @@ Page({
   },
   getList(){
       var that = this;
+      if(wx.getStorageSync('thirdSession')){
+          that.setData({
+            isplayer:false
+          })
+      }else{
+          that.setData({
+            isplayer:true
+          })
+      }
       utils.request('/api/bmsxcx/taste/list/getActlist',
           {
             num: that.data.page,
@@ -111,12 +142,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    if(!app.globalData.userInfo.islogin){
-        utils.showLoading("数据加载中");
-        login.checksess(function(){
-           login.gologin();
-        })
-    }
+      this.getList()
   },
 
   /**
@@ -129,11 +155,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    if(app.globalData.userInfo.isauth){
-        this.setData({
-          isauth: app.globalData.userInfo.isauth
-        })
-    }
+     this.checklogin()
   },
 
   /**

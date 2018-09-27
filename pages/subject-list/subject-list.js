@@ -1,123 +1,168 @@
-// pages/subject-list/subject-list.js
-import cfg from '../../common/config/index.js'
+const app = getApp()
+var utils = require('../../utils/util.js');
+var login = require('../../utils/login.js');
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    movies: [],
-    page: 1,
-    size: 6,
-    loading: true,
-    type:''
+    page:0,
+    size:3,
+    nomore:false,
+    sublist:[],
+    type:null,
+    isplayer:true
   },
-
+  gosub(){
+    wx.switchTab({
+      url: '../subject/subject'
+    })
+  },
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-      const {type} = options;
-      this.setData({type});
-      this.loadMovies();
+  onLoad: function (opts) {
+      this.setData({
+        type:opts.type
+      })
+      this.getList();
   },
 
   scrollmore() {
-    const { page } = this.data;
+    if(this.data.nomore){
+      wx.showToast({
+        title: '暂无更多数据',
+        icon: 'none',
+        duration: 1000
+      })
+      return false;
+    }
+    const {page} = this.data;
     this.setData({
-      page: page + 1
+      page:page+1
     });
-    this.loadMovies();
+    this.getList();
   },
 
   goDetail(e) {
-    const { movieData } = e.currentTarget.dataset;
-    const { _id } = movieData;
-    this.saveData(movieData);
+    var _url = '../detail/detail?actid='+e.currentTarget.dataset.actid;
     wx.navigateTo({
-      url: '../movie-detail/movie-detail?id=' + _id,
+      url: _url
     })
   },
-  saveData(data) {
-    let history = wx.getStorageSync('history') || [];
-    history = history.filter((item) => {
-      return item._id !== data._id
-    })
+  getList(){
+      var that = this;
+      utils.request('/api/bmsxcx/taste/list/getActlist',
+          {
+            num: that.data.page,
+            numget: that.data.size,
+            type: that.data.type,
+            thirdsess: wx.getStorageSync('thirdSession')
+          },
+          "POST", 2, function (res) {
+          wx.hideLoading()
+          const {data} = res;
+          if(data.length==0){
+            that.setData({
+              nomore: true
+            })
+          }
+          if(data.length>0){
+              const sublist = that.data.sublist;
+              for(let i=0;i<data.length;i++){
+                  var now = new Date().getTime();
+                  var res_endtime = data[i].endtime.replace(/\-/g, "/");
+                  var end = new Date(res_endtime).getTime();
+                  data[i]['isend'] = false;
+                  if(now>=end || data[i].status!=0){ //活动时间过了，或者状态不为未开奖
+                      data[i]['isend'] = true;
+                  }
+                  sublist.push(data[i]);
+              }
 
-    history.unshift(data)
-    wx.setStorageSync('history', history)
-  },
-  loadMovies() {
-    const { size, page, type } = this.data;
-    wx.showLoading({
-      title: '',
-      mask: true
-    })
-    this.setData({ loading: true });
-    var _this = this;
-    wx.request({
-      url: `${cfg.domain}/list?type=${type}&page=${page}&size=${size}`,
-      success(res) {
-        console.log(res);
-        const { data } = res.data;
-        const movies = _this.data.movies;
+              that.setData({
+                  sublist:sublist
+              });
+          }
 
-        for (let i = 0; i < data.length; i += 2) {
-          movies.push([data[i], data[i + 1] ? data[i + 1] : null]);
-        }
 
-        _this.setData({ movies, loading: false });
-        wx.hideLoading()
-      }
-    });
+      },function(res){
+          wx.hideLoading()
+          //utils.showModal('提示', res.errMsg,false);
+      });
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+      var that = this;
+      if(this.data.type==1){
+        wx.setNavigationBarTitle({
+          title: '活动分类-组团活动列表'
+        })
+      }else if(this.data.type==2){
+        wx.setNavigationBarTitle({
+          title: '活动分类-问卷测试列表'
+        })
+      }
+      if(wx.getStorageSync('thirdSession')){
+          that.setData({
+            isplayer:false
+          })
+          that.setData({
+              page: 0,
+              nomore:false,
+              sublist:[]
+          })
+          that.getList();
+      }else{
+          that.setData({
+            isplayer:true
+          })
+      }
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
+
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-  
+
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-  
+
   }
 })
