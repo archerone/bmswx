@@ -33,7 +33,7 @@ function request(url, data, method, headertype, successCallback, failCallback, c
 }
 
 /*获取微信用户信息*/
-function getuinfo(that,fn) {
+function getuinfo(fn) {
     wx.getSetting({
       success(res) {
         if (!res.authSetting['scope.userInfo']) {  //若拿不到授权信息
@@ -51,9 +51,9 @@ function getuinfo(that,fn) {
           console.log('已授权')
           wx.getUserInfo({
             success: (res) => {
-              if (that.userInfoReadyCallback) {
-                that.userInfoReadyCallback(res)
-              }
+              // if (that.userInfoReadyCallback) {
+              //   that.userInfoReadyCallback(res)
+              // }
               if(fn){
                   fn(res);
               }
@@ -73,12 +73,10 @@ function wxlogin(that){
             islogin: true
           })
           //获取授权
-          getuinfo(that,function(res){
+          getuinfo(function(res){
                 app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
                 app.globalData.userInfo.nickName = res.userInfo.nickName;
-                that.setData({
-                  nickName: app.globalData.userInfo.nickName,
-                })
+
                 that.getin();
                 //login.getminfo(wx.getStorageSync('thirdSession'),res.encryptedData,res.iv,res.signature,res.rawData)
           })
@@ -87,12 +85,10 @@ function wxlogin(that){
               that.setData({
                 islogin: true
               })
-              getuinfo(that,function(res){  //获取授权
+              getuinfo(function(res){  //获取授权
                     app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
                     app.globalData.userInfo.nickName = res.userInfo.nickName;
-                    that.setData({
-                      nickName: app.globalData.userInfo.nickName,
-                    })
+
                     that.getin(); //参与活动
                     //login.getminfo(wx.getStorageSync('thirdSession'),res.encryptedData,res.iv,res.signature,res.rawData)
               })
@@ -123,12 +119,19 @@ function checkwxse(fn1,fn2){
    wx.checkSession({
        success:function(){
           wx.hideLoading()
-          if(fn1){
-            fn1();
-          }
+          getuinfo(function(res){
+                app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
+                app.globalData.userInfo.nickName = res.userInfo.nickName;
+
+                if(fn1){
+                  fn1();
+                }
+                //login.getminfo(wx.getStorageSync('thirdSession'),res.encryptedData,res.iv,res.signature,res.rawData)
+          })
        },
        fail:function(){
           wx.hideLoading()
+          wx.removeStorageSync('thirdSession')
           if(fn2){
             fn2();
           }

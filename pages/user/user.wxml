@@ -1,9 +1,13 @@
 <view class="container">
   <view class="user-info">
-    <!--<open-data type="userAvatarUrl" class="avatar"></open-data>
-    <open-data type="userNickName" lang="zh_CN" class="name"></open-data>-->
-    <image class="avatar" src="{{avatarUrl}}"></image>
-    <text class="name">{{nickName}}</text>
+    <block wx:if="{{islogin}}">
+      <open-data type="userAvatarUrl" class="avatar"></open-data>
+      <open-data type="userNickName" lang="zh_CN" class="name"></open-data>
+    </block>
+    <block wx:else>
+      <image class="avatar" src="{{avatarUrl}}"></image>
+      <text class="name">{{nickName}}</text>
+    </block>
   </view>
   <view class="listwrap">
     <text class="listab" data-actid="{{joinactid}}" data-tid="1" bindtap="gotoDetail">{{joinlist['length']}}\n<text>已参与</text></text>|

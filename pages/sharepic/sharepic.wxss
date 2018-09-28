@@ -1,2 +1,3 @@
 /* pages/sharepic/sharepic.wxss */
-.savepic{width:698rpx;height:82rpx;line-height:82rpx;color:#353535;position: absolute;bottom:30rpx;left:25rpx;z-index: 1;}
+.canbox{height:130vh;position:relative;background:#546bff;}
+.savepic{width:698rpx;height:82rpx;line-height:82rpx;color:#353535;position: absolute;top:90vh;left:25rpx;z-index: 1;}

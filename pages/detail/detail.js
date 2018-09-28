@@ -373,7 +373,13 @@ Page({
    */
   onLoad: function (options) {
     var that = this;
-    var sharekey = options.sharekey?options.sharekey:'';
+    var sharekey = '';
+    if(options.scene){
+       var sharekey = decodeURIComponent(options.scene);
+    }
+    if(options.sharekey){
+       var sharekey = options.sharekey;
+    }
     that.setData({
       actid: options.actid,
       sharekey: sharekey

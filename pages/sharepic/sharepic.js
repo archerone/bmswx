@@ -218,7 +218,7 @@ Page({
           src: _this.data.shareImgurl,
           success: function (res) {
             var ileft = 0.36 * ow; (312 / 750)
-            var itop = 0.64 * oh;
+            var itop = 0.66 * oh;
             var iw = 200 / 750 * ow;
             //var ih = ow / res.width * res.height
             //var itop = 0.178 * oh;

@@ -70,20 +70,11 @@ Page({
 
               }
 
-              app.globalData.userInfo.avatarUrl = res.data[0]['avatarurl'];
-              app.globalData.userInfo.nickName = res.data[0]['username']
-              that.setData({
-                  avatarUrl: res.data[0]['avatarurl'],
-                  nickName: res.data[0]['username']
-              })
               console.log(that.data.joinlist)
           }else{
-              that.setData({
-                  avatarUrl: 'https://res.beimsn.com/xcx/noavar.png',
-                  nickName: '未登录'
-              })
+
           }
-          
+
 
 
       },function(res){
@@ -131,8 +122,6 @@ Page({
      if(!wx.getStorageSync('thirdSession')){
         that.setData({
           islogin: false,
-          avatarUrl: 'https://res.beimsn.com/xcx/noavar.png',
-          nickName: '未登录',
           joinlist:[],
           winlist:[],
           winactid:[],
@@ -148,8 +137,6 @@ Page({
          },function(){
             that.setData({
               islogin: false,
-              avatarUrl: 'https://res.beimsn.com/xcx/noavar.png',
-              nickName: '未登录',
               joinlist:[],
               winlist:[],
               winactid:[],

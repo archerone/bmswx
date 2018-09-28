@@ -1,3 +1,5 @@
 <!--pages/sharepic/sharepic.wxml-->
-<canvas canvas-id="shareCanvas" style="width:100%;height:100vh"></canvas>
+<view class="canbox">
+<canvas canvas-id="shareCanvas" style="width:100%;height:100vh;"></canvas>
 <button class="savepic" bindtap='saveimg'>保存图片</button>
+</view>
