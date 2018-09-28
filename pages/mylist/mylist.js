@@ -57,8 +57,7 @@ Page({
           {
             num: that.data.page,
             numget: that.data.size,
-            actid: that.data.actid,
-            thirdsess: wx.getStorageSync('thirdSession')
+            actid: that.data.actid
           },
           "POST", 2, function (res) {
           wx.hideLoading()

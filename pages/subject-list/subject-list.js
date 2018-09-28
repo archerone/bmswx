@@ -21,7 +21,7 @@ Page({
   },
   checklogin(){
      var that = this;
-     if(!wx.getStorageSync('thirdSession')){
+     if(!wx.getStorageSync('thirdsess')){
         that.setData({
           islogin: false
         })
@@ -82,7 +82,7 @@ Page({
   },
   getList(){
       var that = this;
-      if(wx.getStorageSync('thirdSession')){
+      if(wx.getStorageSync('thirdsess')){
           that.setData({
             isplayer:false
           })
@@ -95,8 +95,7 @@ Page({
           {
             num: that.data.page,
             numget: that.data.size,
-            type: that.data.type,
-            thirdsess: wx.getStorageSync('thirdSession')
+            type: that.data.type
           },
           "POST", 2, function (res) {
           wx.hideLoading()

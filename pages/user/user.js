@@ -42,7 +42,7 @@ Page({
       });
       utils.request('/api/bmsxcx/taste/list/getulist',
           {
-            thirdsess: wx.getStorageSync('thirdSession')
+            
           },
           "POST", 2, function (res) {
           wx.hideLoading()
@@ -119,7 +119,7 @@ Page({
   },
   checklogin(){
      var that = this;
-     if(!wx.getStorageSync('thirdSession')){
+     if(!wx.getStorageSync('thirdsess')){
         that.setData({
           islogin: false,
           joinlist:[],

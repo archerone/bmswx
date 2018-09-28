@@ -146,8 +146,7 @@ Page({
       }else{
           utils.request('/api/bmsxcx/taste/list/getActinfo',
               {
-                actid: that.data.actid,
-                thirdsess: wx.getStorageSync('thirdSession')
+                actid: that.data.actid
               },
               "POST", 2, function (res) {
               wx.hideLoading()
@@ -212,11 +211,11 @@ Page({
         that.checktime(begin,end)  //根据时间判断状态
 
         if(stime>0){ //未到开始时间,倒计时
-            var time = null;
-            clearInterval(time);
-            time = setInterval(function(){
+            app.globalData.userInfo.timestart = null;
+            clearInterval(app.globalData.userInfo.timestart);
+            app.globalData.userInfo.timend = setInterval(function(){
                 if(stime<=0){
-                   clearInterval(time);
+                   clearInterval(app.globalData.userInfo.timestart);
                    that.checktime(begin,end)
                     return false;
                 }
@@ -228,11 +227,11 @@ Page({
         }
 
         if(otime>0){  //活动还未结束时,倒计时
-            var timer =null;
-            clearInterval(timer);
-            timer = setInterval(function(){
+            app.globalData.userInfo.timend = null;
+            clearInterval(app.globalData.userInfo.timend);
+            app.globalData.userInfo.timend = setInterval(function(){
                if(otime<=0){
-                  clearInterval(timer);
+                  clearInterval(app.globalData.userInfo.timend);
                   that.checktime(begin,end)
                   return false;
                }
@@ -328,13 +327,16 @@ Page({
   },
   checklogin(){
      var that = this;
-     if(!wx.getStorageSync('thirdSession')){
+     if(!wx.getStorageSync('thirdsess')){
         that.setData({
           islogin: false
         })
      }else{
         utils.showLoading("数据加载中");
         login.checkwxse(function(){
+            if(!that.data.islogin){
+                that.getin();
+            }
             that.setData({
               islogin: true
             })
@@ -405,14 +407,16 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+      clearInterval(app.globalData.userInfo.timestart);
+      clearInterval(app.globalData.userInfo.timend);
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+      clearInterval(app.globalData.userInfo.timestart);
+      clearInterval(app.globalData.userInfo.timend);
   },
 
   /**

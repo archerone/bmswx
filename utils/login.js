@@ -1,36 +1,8 @@
 import cfg from '../common/config/index.js'
 let postUrl = cfg.domain;
+var utils = require('./util.js');
 const app = getApp()
-/*ajax请求*/
-function request(url, data, method, headertype, successCallback, failCallback, completeCallback) {
-  //var sessionId = wx.getStorageSync("sessionId");
-  if(headertype == 2){
-    var header = {'content-type': 'application/x-www-form-urlencoded'}
-  }else{
-    var header = {'content-type': 'application/json'}
-  }
-  //获取网络类型。
-  wx.getNetworkType({
-    success: function (res) {
-      // 返回网络类型, 有效值：
-      // wifi/2g/3g/4g/unknown(Android下不常见的网络类型)/none(无网络)
-      var networkType = res.networkType
-      if (networkType == "none") {
-        showModal('提示', '没有网络可用');
-      } else {
-        wx.request({
-          url: postUrl + url, //仅为示例，并非真实的接口地址
-          data: data,
-          method: method ? method : 'GET',
-          header: header,
-          success: successCallback,
-          fail: failCallback,
-          complete: completeCallback
-        });
-      }
-    }
-  })
-}
+
 
 /*获取微信用户信息*/
 function getuinfo(fn) {
@@ -78,7 +50,7 @@ function wxlogin(that){
                 app.globalData.userInfo.nickName = res.userInfo.nickName;
 
                 that.getin();
-                //login.getminfo(wx.getStorageSync('thirdSession'),res.encryptedData,res.iv,res.signature,res.rawData)
+                //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData)
           })
     },function(){
           gologin(function(){ //重新登陆sess
@@ -90,7 +62,7 @@ function wxlogin(that){
                     app.globalData.userInfo.nickName = res.userInfo.nickName;
 
                     that.getin(); //参与活动
-                    //login.getminfo(wx.getStorageSync('thirdSession'),res.encryptedData,res.iv,res.signature,res.rawData)
+                    //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData)
               })
           });
     })
@@ -98,9 +70,8 @@ function wxlogin(that){
 /*参与活动*/
 function getin(username,avar,fn){
       var that = this;
-      request('/api/bmsxcx/taste/login/checkuser',
+      utils.request('/api/bmsxcx/taste/login/checkuser',
           {
-            thirdsess: wx.getStorageSync('thirdSession'),
             username: username,
             avatarurl: avar
           },
@@ -126,12 +97,12 @@ function checkwxse(fn1,fn2){
                 if(fn1){
                   fn1();
                 }
-                //login.getminfo(wx.getStorageSync('thirdSession'),res.encryptedData,res.iv,res.signature,res.rawData)
+                //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData)
           })
        },
        fail:function(){
           wx.hideLoading()
-          wx.removeStorageSync('thirdSession')
+          wx.removeStorageSync('thirdsess')
           if(fn2){
             fn2();
           }
@@ -140,34 +111,33 @@ function checkwxse(fn1,fn2){
 }
 /*微信第三方后台会话状态判断,登录时用到*/
 function checksess(fn1,fn2){
-    var thirdSession = wx.getStorageSync('thirdSession');
+    var thirdsess = wx.getStorageSync('thirdsess');
     wx.checkSession({
        success:function(){
-          if(thirdSession){  //wx的session未过期,还需判断thirdsession是否过期
-              request('/api/bmsxcx/taste/login/islogin', {thirdsess: thirdSession}, "POST", 2, function (res) {
+          if(thirdsess){  //wx的session未过期,还需判断thirdsess是否过期
+              utils.request('/api/bmsxcx/taste/login/islogin', {thirdsess: thirdsess}, "POST", 2, function (res) {
                   wx.hideLoading()
-                  console.log('?????',res.data==1);
                   if(res.data==1){ //1,已登录
-                      console.log('wx.session未过期;thirdSession也未过期,已刷新');
+                      console.log('wx.session未过期;thirdsess也未过期,已刷新');
                       if(fn1){
                         fn1();
                       }
                   }else{//0,未登录
-                      //若wx的session未过期,thirdsession过期,那再进行一次登录
+                      //若wx的session未过期,thirdsess过期,那再进行一次登录
                       wx.hideLoading()
-                      wx.removeStorageSync('thirdSession')
+                      wx.removeStorageSync('thirdsess')
                       if(fn2){
                         fn2();
                       }
                   }
               },function(res){
-                  wx.removeStorageSync('thirdSession')
+                  wx.removeStorageSync('thirdsess')
                   wx.hideLoading()
                   //utils.showModal('提示', res.errMsg,false);
               });
           }else{
-              //若登录状态thirdsession被删
-              wx.removeStorageSync('thirdSession')
+              //若登录状态thirdsess被删
+              wx.removeStorageSync('thirdsess')
               wx.hideLoading()
               if(fn2){
                 fn2();
@@ -175,7 +145,7 @@ function checksess(fn1,fn2){
           }
        },
        fail:function(){
-          wx.removeStorageSync('thirdSession')
+          wx.removeStorageSync('thirdsess')
           wx.hideLoading()
           if(fn2){
             fn2();
@@ -190,11 +160,12 @@ function gologin(fn){
           success: wxres => {
             // 发送 res.code 到后台换取 openId, sessionKey, unionId
             if(wxres.code){
-                request('/api/bmsxcx/taste/login/getopenid', {code: wxres.code}, "POST", 2, function (res) {
+                console.log('getopenid');
+                utils.request('/api/bmsxcx/taste/login/getopenid', {code: wxres.code}, "POST", 2, function (res) {
                     wx.hideLoading()
                     console.log('登录微信成功')
                     if(res.statusCode >= 200 && res.statusCode < 300){
-                        wx.setStorageSync('thirdSession', res.data);
+                        wx.setStorageSync('thirdsess', res.data);
                         if(fn){
                           fn();
                         }
@@ -210,7 +181,7 @@ function gologin(fn){
 
 /*获取用户敏感信息*/
 function getminfo(sess,encry,iv,signature,rawData){  //获取敏感信息unionid,前提是在一个开放平台下的应用
-      request('/api/bmsxcx/taste/login/getmore',
+      utils.request('/api/bmsxcx/taste/login/getmore',
           {
             thirdsess: sess,
             encry: encry,

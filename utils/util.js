@@ -5,11 +5,17 @@ let postUrl = cfg.domain;
  */
 function request(url, data, method, headertype, successCallback, failCallback, completeCallback) {
   //var sessionId = wx.getStorageSync("sessionId");
-  if(headertype == 2){
-    var header = {'content-type': 'application/x-www-form-urlencoded'}
-  }else{
-    var header = {'content-type': 'application/json'}
+  if(wx.getStorageSync("thirdsess")){
+      //小程序暂时无法设置request header,把thirdsess带入每次请求参数中
+      data['thirdsess'] = wx.getStorageSync('thirdsess');
   }
+
+  if(headertype == 2){
+      var header = {'content-type': 'application/x-www-form-urlencoded'}
+  }else{
+      var header = {'content-type': 'application/json'}
+  }
+
   //获取网络类型。
   wx.getNetworkType({
     success: function (res) {
@@ -24,7 +30,20 @@ function request(url, data, method, headertype, successCallback, failCallback, c
           data: data,
           method: method ? method : 'GET',
           header: header,
-          success: successCallback,
+          success: function(res){
+             if(res.data==704){
+                wx.removeStorageSync('thirdsess');
+                showModal('提示','登录失效请重新登录',function(res){
+                  if(res.confirm){
+                      wx.switchTab({
+                        url: '../index/index'
+                      })
+                  }
+                },function(){})
+             }else{
+                successCallback(res);
+             }
+          },
           fail: failCallback,
           complete: completeCallback
         });

@@ -163,8 +163,7 @@ Page({
         wx.getImageInfo({
           src: 'https://res.beimsn.com/images/xcx/bmsxcx.jpg',
           success: function (res) {
-            console.log('bbbbbbbbb',res)
-            var ileft = 0.36 * ow; (312 / 750)
+            var ileft = 0.36 * ow; //(312 / 750)
             var itop = 0.66 * oh;
             var iw = 200 / 750 * ow;
             //var ih = ow / res.width * res.height
@@ -218,7 +217,7 @@ Page({
           src: _this.data.shareImgurl,
           success: function (res) {
             var ileft = 0.36 * ow; (312 / 750)
-            var itop = 0.66 * oh;
+            var itop = 1.04 * ow;
             var iw = 200 / 750 * ow;
             //var ih = ow / res.width * res.height
             //var itop = 0.178 * oh;
@@ -229,11 +228,21 @@ Page({
             var fz = (26 / 750) * ow
             var nlen = str3.length;
             var zlen = fz * nlen;
-            var ileft = ow *200/750;
-            var itop = 1010 / 750 * ow;
+            var zleft = ow *200/750;
+            var ztop = 1010 / 750 * ow;
             ctx.setFontSize(fz)         // 文字字号：22px
-            ctx.fillText(str3, ileft, itop + fz / 2)
-            resolve();
+            ctx.fillText(str3, zleft, ztop + fz / 2)
+            //遮罩裁切二维码
+            wx.getImageInfo({
+              src: "../../assets/image/cov.png",
+              success: function (res) {
+                //var ileft = 0.41 * ow; // (308/750)
+                //var itop = 0.031 * oh; // (37/1195)
+                //var iw = 135 / 750 * ow;
+                ctx.drawImage("../../" + res.path, ileft-6, itop-6, iw+12, iw+12)
+                resolve();
+              }
+            })
           }
         })
       });
