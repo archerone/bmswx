@@ -1,3 +1,63 @@
 /* pages/sharepic/sharepic.wxss */
-.canbox{height:130vh;position:relative;background:#546bff;}
-.savepic{width:698rpx;height:82rpx;line-height:82rpx;color:#353535;position: absolute;top:90vh;left:25rpx;z-index: 1;}
+.canbox{height:100vh;position:relative;background:#546bff;}
+.savepic{width:698rpx;height:82rpx;line-height:82rpx;color:#353535;position: absolute;top:90vh;left:25rpx;z-index: 3;}
+.modal-dialog {
+    width: 451rpx;
+    height: 321rpx;
+    overflow: hidden;
+    position: fixed;
+    top: 50%;
+    left: 0;
+    z-index: 9999;
+    background-color:rgba(0,0,0,0.8);
+    margin: -180rpx 150rpx;
+    border-radius: 6rpx;
+}
+.modal-title {
+    padding-left: 38rpx;
+    padding-top: 24rpx;
+    color: #ffffff;
+    text-align: left;
+}
+
+.modal-content{
+    padding-top: 30rpx;
+    font-size: 30rpx;
+    color: #ffffff;
+    text-align: center;
+}
+
+.modal-footer {
+    padding-top: 60rpx;
+    padding-bottom: 40rpx;
+    display: flex;
+    flex-direction: row;
+    height: 86rpx;
+    border-top: 0px solid rgba(0,0,0,0.8);
+    font-size: 34rpx;
+    line-height: 86rpx;
+}
+.btn-confirm {
+    margin-left: 57rpx;
+    width: 134rpx;
+    height: 68rpx;
+    line-height: 68rpx;
+    color: #ffffff;
+    font-size: 32rpx;
+    text-align: center;
+
+    background-color: #146755;
+    border-radius: 33rpx;
+}
+.btn-cancel {
+    text-align: center;
+    margin-left: 60rpx;
+    width: 134rpx;
+    height: 68rpx;
+    line-height: 68rpx;
+    color: #333333;
+    font-size: 32rpx;
+
+    background-color: #cccccc;
+    border-radius: 33rpx;
+}

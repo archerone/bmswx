@@ -1,5 +1,12 @@
 <!--pages/sharepic/sharepic.wxml-->
 <view class="canbox">
-<canvas canvas-id="shareCanvas" style="width:100%;height:100vh;"></canvas>
-<button class="savepic" bindtap='saveimg'>保存图片</button>
+<canvas canvas-id="shareCanvas" style="width:100%;height:100vh;" bindtap="showcov"></canvas>
+<cover-view class="modal-dialog" wx:if="{{showModal}}">
+   	  <cover-view class="modal-title">提示</cover-view>
+      <cover-view class="modal-content">将图片保存到本地,方便分享</cover-view>
+      <cover-view class="modal-footer">
+        <cover-view class="btn-confirm" bindtap="saveimg">保存</cover-view>
+        <cover-view class="btn-cancel"  bindtap="hidecov">取消</cover-view>
+      </cover-view>
+</cover-view>
 </view>

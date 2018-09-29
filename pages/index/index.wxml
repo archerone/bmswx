@@ -1,6 +1,3 @@
-<view class="cover" wx:if="{{false}}">
-	<button open-type="getUserInfo" bindgetuserinfo="wxlogin" class="btn_get">微信登录</button>
-</view>
 <view class="list-box">
   <scroll-view scroll-y="true" lower-threshold="200" style='height:100%' bindscrolltolower="scrollmore">
     <view class="list-item" wx:for="{{litems}}" wx:key="index" wx:for-item="litemData">

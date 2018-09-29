@@ -59,14 +59,6 @@ Page({
     });
     this.getList();
   },
-  wxlogin(){
-     var that = this;
-     if(!that.data.islogin){
-          login.wxlogin(that)
-      }else{
-          that.getin();
-      }
-  },
   getin:function(){
         var that = this;
         login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){

@@ -22,9 +22,6 @@ Page({
       url: '../share/share',
     })
   },
-  gologin(){
-
-  },
   gotoDetail(e) {
     const { actid } = e.currentTarget.dataset
     const { tid } = e.currentTarget.dataset
@@ -42,7 +39,7 @@ Page({
       });
       utils.request('/api/bmsxcx/taste/list/getulist',
           {
-            
+
           },
           "POST", 2, function (res) {
           wx.hideLoading()
@@ -95,13 +92,12 @@ Page({
   onReady: function () {
 
   },
+  wxlogout(){
+     wx.removeStorageSync('thirdsess')
+     this.checklogin();
+  },
   wxlogin(){
-     var that = this;
-     if(!that.data.islogin){
-          login.wxlogin(that)
-     }else{
-          that.getin();
-     }
+     login.wxlogin(this)
   },
   getin:function(){  //登录活动服务器
       var that = this;

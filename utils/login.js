@@ -16,6 +16,7 @@ function getuinfo(fn) {
             },
             fail(){
               console.log('未授权1')
+              wx.removeStorageSync('thirdsess')
             }
           })
         }
@@ -37,35 +38,22 @@ function getuinfo(fn) {
       }
     })
 }
-/*用微信登录*/
+/*用微信授权登录,成功后参与活动*/
 function wxlogin(that){
     wx.showLoading("数据加载中");
-    checksess(function(){  //检查sess
-          that.setData({
-            islogin: true
-          })
-          //获取授权
-          getuinfo(function(res){
-                app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
-                app.globalData.userInfo.nickName = res.userInfo.nickName;
+    gologin(function(){ //登陆sess
+        that.setData({
+          islogin: true
+        })
+        //参与活动需要授权信息
+        getuinfo(function(res){  //获取授权
+              app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
+              app.globalData.userInfo.nickName = res.userInfo.nickName;
 
-                that.getin();
-                //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData)
-          })
-    },function(){
-          gologin(function(){ //重新登陆sess
-              that.setData({
-                islogin: true
-              })
-              getuinfo(function(res){  //获取授权
-                    app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
-                    app.globalData.userInfo.nickName = res.userInfo.nickName;
-
-                    that.getin(); //参与活动
-                    //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData)
-              })
-          });
-    })
+              that.getin(); //参与活动
+              //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData)
+        })
+    });
 }
 /*参与活动*/
 function getin(username,avar,fn){
@@ -91,7 +79,7 @@ function checkwxse(fn1,fn2){
        success:function(){
           wx.hideLoading()
           getuinfo(function(res){
-                app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
+                app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl?res.userInfo.avatarUrl:'https://res.beimsn.com/xcx/noavar.png';
                 app.globalData.userInfo.nickName = res.userInfo.nickName;
 
                 if(fn1){
@@ -164,8 +152,8 @@ function gologin(fn){
                 utils.request('/api/bmsxcx/taste/login/getopenid', {code: wxres.code}, "POST", 2, function (res) {
                     wx.hideLoading()
                     console.log('登录微信成功')
-                    if(res.statusCode >= 200 && res.statusCode < 300){
-                        wx.setStorageSync('thirdsess', res.data);
+                    if(res.data.code == 702){
+                        wx.setStorageSync('thirdsess', res.data.access_token);
                         if(fn){
                           fn();
                         }
@@ -200,7 +188,6 @@ function getminfo(sess,encry,iv,signature,rawData){  //获取敏感信息unionid
 module.exports = {
   getuinfo: getuinfo,
   getminfo: getminfo,
-  checksess: checksess,
   gologin: gologin,
   getin: getin,
   checkwxse:checkwxse,

@@ -331,6 +331,7 @@ Page({
         that.setData({
           islogin: false
         })
+        that.getact();
      }else{
         utils.showLoading("数据加载中");
         login.checkwxse(function(){
@@ -344,22 +345,18 @@ Page({
             that.setData({
               islogin: false
             })
+            that.getact();
          })
      }
   },
   wxlogin(){
-     var that = this;
-     if(!that.data.islogin){
-          login.wxlogin(that)
-      }else{
-          that.getin();
-      }
+     login.wxlogin(this)
   },
   getin:function(){  //登录活动服务器
       var that = this;
       login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
         console.log(res.data.msg);
-        if(res.data.status == 1){
+        if(res.data.code == 702){
             that.getact();
         }else{
             wx.showToast({
@@ -386,8 +383,6 @@ Page({
       actid: options.actid,
       sharekey: sharekey
     })
-    utils.showLoading("数据加载中");
-    that.getact();
   },
 
   /**

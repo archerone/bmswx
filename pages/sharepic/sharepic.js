@@ -1,6 +1,7 @@
 // pages/sharepic/sharepic.js
 const app = getApp()
 var utils = require('../../utils/util.js');
+var login = require('../../utils/login.js');
 Page({
 
   /**
@@ -12,16 +13,76 @@ Page({
     endtime:null,
     actid:null,
     sharekey:null,
-    sharetype:1
+    sharetype:1,
+    islogin:false,
+    showModal: false
+  },
+  showcov(){
+    this.setData({
+      showModal: true
+    })
+  },
+  hidecov(){
+    this.setData({
+      showModal: false
+    })
+  },
+  checklogin(){
+     var that = this;
+     if(!wx.getStorageSync('thirdsess')){
+        that.setData({
+          islogin: false
+        })
+        utils.showModal('提示','登录失效请重新登录',function(res){
+          if(res.confirm){
+              wx.switchTab({
+                url: '../index/index'
+              })
+          }
+        },function(){})
+     }else{
+        utils.showLoading("数据加载中");
+        login.checkwxse(function(){
+            that.setData({
+              islogin: true
+            })
+            if(that.data.sharetype==2){
+                wx.setNavigationBarTitle({
+                  title: '炫耀一下'
+                })
+                that.showtime();
+            }else{
+                wx.setNavigationBarTitle({
+                  title: '分享抽奖'
+                })
+                that.getqcode();
+            }
+         },function(){
+            that.setData({
+              islogin: false
+            })
+            utils.showModal('提示','登录失效请重新登录',function(res){
+              if(res.confirm){
+                  wx.switchTab({
+                    url: '../index/index'
+                  })
+              }
+            },function(){})
+         })
+     }
   },
   saveimg:function(){
+    var that = this;
     wx.canvasToTempFilePath({
       canvasId: 'shareCanvas',
       success: function (res) {
-        console.log(res.tempFilePath)
+        that.setData({
+          showModal: false
+        })
         wx.saveImageToPhotosAlbum({
           filePath: res.tempFilePath,
           success(res) {
+            that.hidecov()
             wx.showModal({
               content: '图片已保存到相册，赶紧晒一下吧~',
               showCancel: false,
@@ -60,6 +121,7 @@ Page({
       });
   },
   showtime(){
+      var that=this;
       var uname = app.globalData.userInfo.nickName;
       var str1 = '奖品:'+this.data.actname;
       var str2 = '我中奖啦！';
@@ -190,12 +252,16 @@ Page({
         ctx.setFillStyle('#ffffff')  // 文字颜色：黑色
         ctx.draw()
         wx.hideLoading()
+        that.setData({
+          showModal: true
+        })
       }, function (err) {
 
       })
 
   },
   drawpage(){
+      var that=this;
       var uname = app.globalData.userInfo.nickName;
       var str1 = this.data.actname;
       var str2 = this.data.endtime+' 自动开奖';
@@ -234,12 +300,12 @@ Page({
             ctx.fillText(str3, zleft, ztop + fz / 2)
             //遮罩裁切二维码
             wx.getImageInfo({
-              src: "../../assets/image/cov.png",
+              src: "../../assets/image/cov2.png",
               success: function (res) {
                 //var ileft = 0.41 * ow; // (308/750)
                 //var itop = 0.031 * oh; // (37/1195)
                 //var iw = 135 / 750 * ow;
-                ctx.drawImage("../../" + res.path, ileft-6, itop-6, iw+12, iw+12)
+                ctx.drawImage("../../" + res.path, ileft-3, itop-3, iw+6, iw+6)
                 resolve();
               }
             })
@@ -288,10 +354,12 @@ Page({
         })
       });
       //头像信息
+      console.log(app.globalData.userInfo.avatarUrl)
       const p3 = new Promise(function (resolve, reject) {
         wx.getImageInfo({
           src: app.globalData.userInfo.avatarUrl,
           success: function (res) {
+            console.log(res)
             var ileft = 0.416 * ow; (312 / 750)
             var itop = 0.033 * oh;
             var iw = 128 / 750 * ow;
@@ -328,6 +396,9 @@ Page({
         ctx.setTextAlign('center')    // 文字居中
         ctx.setFillStyle('#ffffff')  // 文字颜色：黑色
         ctx.draw()
+        that.setData({
+          showModal: true
+        })
         wx.hideLoading()
       }, function (err) {
 
@@ -368,17 +439,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    if(this.data.sharetype==2){
-      wx.setNavigationBarTitle({
-        title: '炫耀一下'
-      })
-      this.showtime();
-    }else{
-      wx.setNavigationBarTitle({
-        title: '分享抽奖'
-      })
-      this.getqcode();
-    }
+      this.checklogin();
   },
 
   /**

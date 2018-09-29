@@ -31,9 +31,9 @@ function request(url, data, method, headertype, successCallback, failCallback, c
           method: method ? method : 'GET',
           header: header,
           success: function(res){
-             if(res.data==704){
+             if(res.data.code==704){
                 wx.removeStorageSync('thirdsess');
-                showModal('提示','登录失效请重新登录',function(res){
+                showModal('提示',res.data.msg,function(res){
                   if(res.confirm){
                       wx.switchTab({
                         url: '../index/index'
