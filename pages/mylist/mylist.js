@@ -15,6 +15,12 @@ Page({
       url: '../user/user'
     })
   },
+  goTest(e){
+      var _url = '../wxtest/wxtest?acturl='+e.currentTarget.dataset.acturl;
+      wx.reLaunch({
+        url: _url
+      })
+  },
   onLoad(opts){
     this.setData({
       actid:opts.actid,

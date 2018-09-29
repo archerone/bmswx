@@ -15,7 +15,7 @@ page {
   align-items: center;
   justify-content: center;
   background-color: #fff;
-  margin:200rpx 0 90rpx;
+  margin:80rpx 0 20rpx;
 }
 
 .avatar {
@@ -55,5 +55,6 @@ page {
   font-size:26rpx;
   color:#bbbbbb;
 }
-.item_btn{width:638rpx;height:82rpx;background:#546bff;line-height:81rpx;color:#fff;font-size:30rpx;border-radius:55rpx;margin-top:75rpx;box-shadow: 0px 0px 15rpx #c4cbff;}
+.item_btn{width:638rpx;height:82rpx;background:#546bff;line-height:81rpx;color:#fff;font-size:30rpx;border-radius:55rpx;margin-top:30rpx;box-shadow: 0px 0px 15rpx #c4cbff;}
+.item_btn2{width:280rpx;height:82rpx;display:inline-block;background:#546bff;line-height:81rpx;color:#fff;font-size:30rpx;border-radius:55rpx;margin:30rpx 10rpx 0;box-shadow: 0px 0px 15rpx #c4cbff;}
 

@@ -7,7 +7,8 @@
     "pages/subject-list/subject-list",
     "pages/mylist/mylist",
     "pages/sharepic/sharepic",
-    "pages/gprize/gprize"
+    "pages/gprize/gprize",
+    "pages/wxtest/wxtest"
   ],
   "window": {
     "navigationBarBackgroundColor": "#fff",

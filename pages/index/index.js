@@ -59,10 +59,16 @@ Page({
     });
     this.getList();
   },
+  goTest(e){
+      var _url = '../wxtest/wxtest?acturl='+e.currentTarget.dataset.acturl;
+      wx.reLaunch({
+        url: _url
+      })
+  },
   getin:function(){
         var that = this;
         login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
-            if(res.data.status == 1){
+            if(res.data.code == 702){
                 console.log(res.data.msg);
                 that.getList();
             }else{
@@ -167,7 +173,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+      
   },
 
   /**

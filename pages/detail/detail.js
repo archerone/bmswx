@@ -350,7 +350,13 @@ Page({
      }
   },
   wxlogin(){
-     login.wxlogin(this)
+     var that = this;
+     login.wxlogin(function(){
+        that.setData({
+          islogin: true
+        })
+        that.getin();
+     })
   },
   getin:function(){  //登录活动服务器
       var that = this;
@@ -383,6 +389,7 @@ Page({
       actid: options.actid,
       sharekey: sharekey
     })
+    this.checklogin()
   },
 
   /**
@@ -396,7 +403,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.checklogin()
+    //this.checklogin()
   },
   /**
    * 生命周期函数--监听页面隐藏

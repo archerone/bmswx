@@ -1,17 +1,28 @@
 <view class="list-box">
-  <scroll-view scroll-y="true" lower-threshold="200" style='height:100%' bindscrolltolower="scrollmore">
+  <scroll-view scroll-y="true" lower-threshold="50" style='height:100%' bindscrolltolower="scrollmore">
     <view class="list-item" wx:for="{{litems}}" wx:key="index" wx:for-item="litemData">
-        <image class="poster" bindtap='goDetail' data-actid="{{litemData.id}}" lazy-load="true" src="{{litemData.actimg}}" />
-        <view class="infos">
-          <view class="infos_text">奖品: {{litemData.actname}}</view>
-          <view class="infos_ico" wx:if="{{litemData.actype==1}}">拼团</view>
-          <view class="infos_ico" wx:if="{{litemData.actype==2}}">问卷</view>
-        </view>
-        <view class="infos">
-          <text class="infos_time">{{litemData.begintime}} 自动开奖</text>
-        </view>
-        <image class="isjoin" wx:if="{{litemData.isjoin && !litemData.isend}}" src="../../assets/image/icon-tag.png"></image>
-        <image class="isjoin" wx:if="{{litemData.isend}}" src="../../assets/image/icon-tag2.png"></image>
+      <block wx:if="{{litemData.actype==1}}">
+          <image class="poster" bindtap='goDetail' data-actid="{{litemData.id}}" lazy-load="true" src="{{litemData.actimg}}" />
+          <view class="infos">
+            <view class="infos_text">奖品: {{litemData.actname}}</view>
+            <view class="infos_ico">拼团</view>
+          </view>
+          <view class="infos">
+            <text class="infos_time">{{litemData.begintime}} 自动开奖</text>
+          </view>
+          <image class="isjoin" wx:if="{{litemData.isjoin && !litemData.isend}}" src="../../assets/image/icon-tag.png"></image>
+          <image class="isjoin" wx:if="{{litemData.isend}}" src="../../assets/image/icon-tag2.png"></image>
+      </block>
+      <block wx:if="{{litemData.actype==2}}">
+          <image class="poster" data-acturl="{{litemData.acturl}}" bindtap='goTest' lazy-load="true" src="{{litemData.actimg}}" />
+          <view class="infos">
+            <view class="infos_text">{{litemData.actname}}</view>
+            <view class="infos_ico">问卷</view>
+          </view>
+          <view class="infos">
+            <text class="infos_time">测试结果仅供参考,非诊断</text>
+          </view>
+      </block>
     </view>
   </scroll-view>
 </view>

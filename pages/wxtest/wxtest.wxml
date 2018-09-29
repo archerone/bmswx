@@ -1,0 +1,2 @@
+<!--pages/wxtest/wxtest.wxml-->
+<web-view src="{{acturl}}"></web-view>

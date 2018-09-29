@@ -39,21 +39,19 @@ function getuinfo(fn) {
     })
 }
 /*用微信授权登录,成功后参与活动*/
-function wxlogin(that){
+function wxlogin(fn){
     wx.showLoading("数据加载中");
-    gologin(function(){ //登陆sess
-        that.setData({
-          islogin: true
-        })
-        //参与活动需要授权信息
-        getuinfo(function(res){  //获取授权
-              app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
-              app.globalData.userInfo.nickName = res.userInfo.nickName;
+    getuinfo(function(res){  //获取授权
+          app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
+          app.globalData.userInfo.nickName = res.userInfo.nickName;
 
-              that.getin(); //参与活动
-              //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData)
-        })
-    });
+          gologin(function(){ //登陆sess
+              if(fn){
+                fn();
+              }
+          });
+          //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData)
+    })
 }
 /*参与活动*/
 function getin(username,avar,fn){

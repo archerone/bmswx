@@ -73,7 +73,12 @@ Page({
     });
     this.getList();
   },
-
+  goTest(e){
+      var _url = '../wxtest/wxtest?acturl='+e.currentTarget.dataset.acturl;
+      wx.reLaunch({
+        url: _url
+      })
+  },
   goDetail(e) {
     var _url = '../detail/detail?actid='+e.currentTarget.dataset.actid;
     wx.navigateTo({

@@ -83,7 +83,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+      this.checklogin()
   },
 
   /**
@@ -97,12 +97,18 @@ Page({
      this.checklogin();
   },
   wxlogin(){
-     login.wxlogin(this)
+     var that = this;
+     login.wxlogin(function(){
+        that.setData({
+          islogin: true
+        })
+        that.getin();
+     })
   },
   getin:function(){  //登录活动服务器
       var that = this;
       login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
-        if(res.data.status == 1){
+        if(res.data.code == 702){
             that.getuact()
         }else{
             wx.showToast({
@@ -143,7 +149,7 @@ Page({
   },
 
   onShow: function () {
-    this.checklogin()
+    //this.checklogin()
   },
 
   /**
