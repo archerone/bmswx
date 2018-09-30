@@ -1,5 +1,7 @@
 <block wx:if="{{mylist.length}}">
+  <official-account></official-account>
   <view class="list-box">
+  	  <official-account></official-account>
 	  <scroll-view scroll-y="true" lower-threshold="200" style='height:100%' bindscrolltolower="scrollmore">
 	    <view class="list-item" wx:for="{{mylist}}" wx:key="index" wx:for-item="litemData">
 	        <block wx:if="{{litemData.actype==1}}">

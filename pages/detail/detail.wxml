@@ -1,5 +1,6 @@
 <!--pages/detail/detail.wxml-->
 <view class="gohome" bindtap="gohome" wx:if="{{sharekey}}">返回首页</view>
+<official-account></official-account>
 <view class="list-box">
     <view class="list-item">
         <image class="poster" lazy-load="true" src="{{actdata.actimg}}" />

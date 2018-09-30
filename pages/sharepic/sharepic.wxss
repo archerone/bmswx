@@ -1,5 +1,5 @@
 /* pages/sharepic/sharepic.wxss */
-.canbox{height:100vh;position:relative;background:#546bff;}
+.canbox{height:100vh;position:relative;background:#546bff;position:relative;top:168rpx;}
 .savepic{width:698rpx;height:82rpx;line-height:82rpx;color:#353535;position: absolute;top:90vh;left:25rpx;z-index: 3;}
 .modal-dialog {
     width: 451rpx;

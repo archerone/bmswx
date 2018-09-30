@@ -6,6 +6,7 @@ page {
   height: auto;
   align-items:inherit;
   justify-content:inherit;
+  position:relative;top:168rpx;
 }
 .user-info {
   width: 100%;
@@ -37,7 +38,7 @@ page {
 .listwrap{
   width: 100%;
   font-size:30rpx;
-  padding: 40rpx 0;
+  padding: 10rpx 0;
   display: flex;
   flex-direction: row;
   justify-content: center;

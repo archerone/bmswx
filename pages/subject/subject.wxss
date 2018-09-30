@@ -1,5 +1,6 @@
 .container {
   padding: 40rpx 25rpx;
+  position:relative;top:168rpx;
 }
 
 .type-item {

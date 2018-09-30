@@ -1,4 +1,5 @@
 <!--pages/gprize.wxml-->
+<official-account></official-account>
 <view class="box">
 	<image src="../../assets/image/bg-dot.png" class="bg"></image>
 	<view class="prize_box">

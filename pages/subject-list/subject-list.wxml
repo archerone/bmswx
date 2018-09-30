@@ -1,4 +1,5 @@
 <block wx:if="{{sublist.length}}">
+  <official-account></official-account>
   <view class="list-box">
 	  <scroll-view scroll-y="true" lower-threshold="200" style='height:100%' bindscrolltolower="scrollmore">
 	    <view class="list-item" wx:for="{{sublist}}" wx:key="index" wx:for-item="litemData">
