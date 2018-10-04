@@ -149,7 +149,7 @@ Page({
   },
 
   onShow: function () {
-    //this.checklogin()
+    this.checklogin()
   },
 
   /**

@@ -3,7 +3,7 @@
 .btn_get{width:200rpx;height:100rpx;background:red;}
 
 .gohome{ width:30rpx;height:140rpx;font-size:24rpx;padding:10rpx;background:red;position:fixed;left:-3rpx;top:40%;z-index:10;background:#fff;border:3rpx solid #546bff;border-left:none;border-radius:10rpx;color:#546bff;}
-.list-box{ width:698rpx;height:100%;padding:30rpx 26rpx 0;background:#f6f7f9;position:relative;top:168rpx;}
+.list-box{ width:698rpx;height:100%;padding:30rpx 26rpx 0;background:#f6f7f9;position:relative;}
 .list-item{ width:698rpx;background:#fff;border-radius:10px;margin-bottom:35rpx;position:relative;padding-bottom:50px;}
 .list-item .poster{width:100%;height:341rpx;border-radius:10rpx;margin-bottom:10rpx;}
 .infos{padding:0rpx 30rpx;}

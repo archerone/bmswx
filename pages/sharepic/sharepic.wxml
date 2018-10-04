@@ -1,5 +1,7 @@
 <!--pages/sharepic/sharepic.wxml-->
-<official-account></official-account>
+<import src="../../common/template/offic.wxml"/>
+<template is="offic_top"></template>
+<image style="width:100%;height:150rpx;" src="../../assets/image/offictop.png"></image>
 <view class="canbox">
 <canvas canvas-id="shareCanvas" style="width:100%;height:100vh;" bindtap="showcov"></canvas>
 <cover-view class="modal-dialog" wx:if="{{showModal}}">

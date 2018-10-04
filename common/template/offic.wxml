@@ -1,0 +1,3 @@
+<template name="offic_top">
+    <official-account></official-account>
+</template>

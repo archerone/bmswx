@@ -91,7 +91,7 @@ Page({
             isplayer:true
           })
       }
-      utils.request('/api/bmsxcx/taste/list/getActlist',
+      utils.request('/api/bmsxcx/taste/list/getactlist',
           {
             num: that.data.page,
             numget: that.data.size

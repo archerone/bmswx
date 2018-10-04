@@ -1,6 +1,8 @@
 <!--pages/detail/detail.wxml-->
-<view class="gohome" bindtap="gohome" wx:if="{{sharekey}}">返回首页</view>
-<official-account></official-account>
+<view class="gohome" bindtap="gohome">返回首页</view>
+<import src="../../common/template/offic.wxml"/>
+<template is="offic_top"></template>
+<image style="width:100%;height:150rpx;" src="../../assets/image/offictop.png"></image>
 <view class="list-box">
     <view class="list-item">
         <image class="poster" lazy-load="true" src="{{actdata.actimg}}" />
@@ -68,7 +70,7 @@
               <image class="peo_pic" src='../../assets/image/icon-add.png'></image>
               <view class='peo_name peo_add'>开团参与</view>
            </view>
-           <view class="peo_item" wx:if="{{!isfull && iscreat}}" bindtap="goInvite">
+           <view class="peo_item" wx:if="{{!isfull && iscreat && !isend }}" bindtap="goInvite">
               <image class="peo_pic" src='../../assets/image/icon-add.png'></image>
               <view class='peo_name peo_add'>邀请好友</view>
            </view>
@@ -89,7 +91,7 @@
          活动名额：活动上限为{{maxjoins}}人,当前人数为{{joineds}}
        </view>
        <view class="item3_info">
-         中奖规则：成功开团,并且团内人数满足{{actdata.groupnum}}人时,算做成功参与。用户只能加入一个团,若中奖则团内所有人都中奖。
+         中奖规则：组团人数满足{{actdata.groupnum}}人时,组团成功,可以参与抽奖。用户只能进入一个团,开团或加入一个团后不能退出。
        </view>
     </view>
     <view class="list-item4">

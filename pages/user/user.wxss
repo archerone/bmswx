@@ -6,7 +6,7 @@ page {
   height: auto;
   align-items:inherit;
   justify-content:inherit;
-  position:relative;top:168rpx;
+  position:relative;
 }
 .user-info {
   width: 100%;

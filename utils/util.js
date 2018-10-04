@@ -35,9 +35,37 @@ function request(url, data, method, headertype, successCallback, failCallback, c
                 wx.removeStorageSync('thirdsess');
                 showModal('提示',res.data.msg,function(res){
                   if(res.confirm){
-                      wx.switchTab({
-                        url: '../index/index'
-                      })
+                      var pages = getCurrentPages()
+                      var currentPage = pages[pages.length-1] 
+                      console.log(currentPage,currentPage.options.sharekey)
+                      if(currentPage.options.sharekey){
+                          var url = '/'+currentPage.route+'?actid='+currentPage.options.actid+'&sharekey='+currentPage.options.sharekey; 
+                      }
+                      else{
+                          var url = '/'+currentPage.route+'?actid='+currentPage.options.actid;
+                      }
+                      if(currentPage.route=="pages/detail/detail"){
+                          wx.redirectTo({
+                            url: url
+                          })
+                      }else{
+                          wx.switchTab({
+                            url: '../index/index'
+                          })
+                      }
+                  }else{
+                      var pages = getCurrentPages()
+                      var currentPage = pages[pages.length-1] 
+                      var url = '/'+currentPage.route+'?actid='+currentPage.options.actid 
+                      if(currentPage.route=="pages/detail/detail"){
+                          wx.redirectTo({
+                            url: url
+                          })
+                      }else{
+                          wx.switchTab({
+                            url: '../index/index'
+                          })
+                      }
                   }
                 },function(){})
              }else{

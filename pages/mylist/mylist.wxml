@@ -1,8 +1,10 @@
 <block wx:if="{{mylist.length}}">
-  <official-account></official-account>
+  <import src="../../common/template/offic.wxml"/>
+  <template is="offic_top"></template>
   <view class="list-box">
   	  <official-account></official-account>
 	  <scroll-view scroll-y="true" lower-threshold="200" style='height:100%' bindscrolltolower="scrollmore">
+	    <image style="width:100%;height:150rpx;" src="../../assets/image/offictop.png"></image>
 	    <view class="list-item" wx:for="{{mylist}}" wx:key="index" wx:for-item="litemData">
 	        <block wx:if="{{litemData.actype==1}}">
 		          <image class="poster" bindtap='goDetail' data-actid="{{litemData.id}}" lazy-load="true" src="{{litemData.actimg}}" />

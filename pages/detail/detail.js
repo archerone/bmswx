@@ -378,18 +378,37 @@ Page({
    */
   onLoad: function (options) {
     var that = this;
-    var sharekey = '';
-    if(options.scene){
+    if(options.scene){ //如果是扫分享码过来的
        var sharekey = decodeURIComponent(options.scene);
+       utils.request('/api/bmsxcx/taste/list/getactid',
+          {
+            sharekey: sharekey
+          },
+          "POST", 2, function (res) {
+          wx.hideLoading()
+          if(res.data.actid){
+              that.setData({
+                actid: res.data.actid,
+                sharekey: sharekey
+              })
+              that.checklogin()
+          }
+      },function(res){
+          wx.hideLoading()
+          //utils.showModal('提示', res.errMsg,false);
+      });
+    }else{ //不是扫分享码的
+       if(options.sharekey){
+           var sharekey = options.sharekey;
+           that.setData({
+              sharekey: sharekey
+           })
+       }
+       that.setData({
+           actid: options.actid
+       })
+       that.checklogin()
     }
-    if(options.sharekey){
-       var sharekey = options.sharekey;
-    }
-    that.setData({
-      actid: options.actid,
-      sharekey: sharekey
-    })
-    this.checklogin()
   },
 
   /**

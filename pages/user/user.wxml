@@ -1,5 +1,7 @@
-<official-account></official-account>
+<import src="../../common/template/offic.wxml"/>
+<template is="offic_top"></template>
 <view class="container">
+  <image style="width:100%;height:150rpx;" src="../../assets/image/offictop.png"></image>
   <view class="user-info">
     <block wx:if="{{islogin}}">
       <open-data type="userAvatarUrl" class="avatar"></open-data>
