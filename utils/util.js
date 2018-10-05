@@ -32,7 +32,10 @@ function request(url, data, method, headertype, successCallback, failCallback, c
           header: header,
           success: function(res){
              if(res.data.code==704){
+                wx.hideLoading()
                 wx.removeStorageSync('thirdsess');
+                wx.removeStorageSync('nickName');
+                wx.removeStorageSync('avatarUrl');
                 showModal('提示',res.data.msg,function(res){
                   if(res.confirm){
                       var pages = getCurrentPages()
@@ -50,7 +53,12 @@ function request(url, data, method, headertype, successCallback, failCallback, c
                           })
                       }else{
                           wx.switchTab({
-                            url: '../index/index'
+                            url: '../user/user',
+                            success: function (e) {
+                              var page = getCurrentPages().pop();
+                              if (page == undefined || page == null) return;
+                              page.onLoad();
+                            }
                           })
                       }
                   }else{

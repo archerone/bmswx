@@ -33,42 +33,22 @@ Page({
         that.setData({
           islogin: false
         })
-        utils.showModal('提示','登录失效请重新登录',function(res){
-          if(res.confirm){
-              wx.switchTab({
-                url: '../index/index'
-              })
-          }
-        },function(){})
      }else{
         utils.showLoading("数据加载中");
-        login.checkwxse(function(){
-            that.setData({
-              islogin: true
+        that.setData({
+          islogin: true
+        })
+        if(that.data.sharetype==2){
+            wx.setNavigationBarTitle({
+              title: '炫耀一下'
             })
-            if(that.data.sharetype==2){
-                wx.setNavigationBarTitle({
-                  title: '炫耀一下'
-                })
-                that.showtime();
-            }else{
-                wx.setNavigationBarTitle({
-                  title: '分享抽奖'
-                })
-                that.getqcode();
-            }
-         },function(){
-            that.setData({
-              islogin: false
+            that.showtime();
+        }else{
+            wx.setNavigationBarTitle({
+              title: '分享抽奖'
             })
-            utils.showModal('提示','登录失效请重新登录',function(res){
-              if(res.confirm){
-                  wx.switchTab({
-                    url: '../index/index'
-                  })
-              }
-            },function(){})
-         })
+            that.getqcode();
+        }
      }
   },
   saveimg:function(){
@@ -121,6 +101,7 @@ Page({
       });
   },
   showtime(){
+      app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
       var that=this;
       var uname = app.globalData.userInfo.nickName;
       var str1 = '奖品:'+this.data.actname;
@@ -150,6 +131,7 @@ Page({
       })
       //头像信息
       const p1 = new Promise(function (resolve, reject) {
+        app.globalData.userInfo.avatarUrl = wx.getStorageSync('avatarUrl');
         wx.getImageInfo({
           src: app.globalData.userInfo.avatarUrl,
           success: function (res) {
@@ -261,6 +243,7 @@ Page({
 
   },
   drawpage(){
+      app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
       var that=this;
       var uname = app.globalData.userInfo.nickName;
       var str1 = this.data.actname;
@@ -354,8 +337,8 @@ Page({
         })
       });
       //头像信息
-      console.log(app.globalData.userInfo.avatarUrl)
       const p3 = new Promise(function (resolve, reject) {
+        app.globalData.userInfo.avatarUrl = wx.getStorageSync('avatarUrl');
         wx.getImageInfo({
           src: app.globalData.userInfo.avatarUrl,
           success: function (res) {
@@ -426,6 +409,7 @@ Page({
            })
         }
       }
+      this.checklogin();
   },
 
   /**
@@ -439,7 +423,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-      this.checklogin();
+      //this.checklogin();
   },
 
   /**

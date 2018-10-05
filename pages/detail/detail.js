@@ -41,6 +41,7 @@ Page({
       })
   },
   joingroup(){ //加入团队
+      app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
       var that = this;
       utils.showModal('提示','入团后无法加入其它团',function(res){
           if(res.confirm){
@@ -94,6 +95,7 @@ Page({
   },
   opengroup(){  //开团
       var that = this;
+      app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
       utils.showModal('提示','开团后不能参与其它团',function(res){
           if(res.confirm){
               utils.request('/api/bmsxcx/taste/login/joins',
@@ -126,7 +128,7 @@ Page({
   },
   getact(){   //获取活动信息
       var that = this;
-      utils.showLoading("数据加载中");
+      utils.showLoading("加载中...");
       if(that.data.sharekey){  //受邀打开页面
           utils.request('/api/bmsxcx/taste/list/getActinfo',
               {
@@ -169,6 +171,7 @@ Page({
   },
   initact(res){  //初始化活动信息
         var that = this;
+        app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
         var now = new Date().getTime();
         var res_endtime = res.data.endtime.replace(/\-/g, "/");
         var res_begintime = res.data.begintime.replace(/\-/g, "/");
@@ -251,7 +254,6 @@ Page({
             actname: res.data.actname,
             maxjoins: res.data.maxjoins?res.data.maxjoins:0
         })
-        console.log(that.data.actdata,that.data.isfull,that.data.iswin)
         that.getjoman();
   },
   checktime(begin,end){  //初始化时间状态
@@ -331,23 +333,12 @@ Page({
         that.setData({
           islogin: false
         })
-        that.getact();
      }else{
-        utils.showLoading("数据加载中");
-        login.checkwxse(function(){
-            if(!that.data.islogin){
-                that.getin();
-            }
-            that.setData({
-              islogin: true
-            })
-         },function(){
-            that.setData({
-              islogin: false
-            })
-            that.getact();
-         })
+        that.setData({
+          islogin: true
+        })
      }
+     that.getact();
   },
   wxlogin(){
      var that = this;
@@ -360,6 +351,8 @@ Page({
   },
   getin:function(){  //登录活动服务器
       var that = this;
+      app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
+      app.globalData.userInfo.avatarUrl = wx.getStorageSync('avatarUrl');
       login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
         console.log(res.data.msg);
         if(res.data.code == 702){
@@ -444,9 +437,10 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-      if(this.data.islogin){
+      /*if(this.data.islogin){
         this.getact()
-      }
+      }*/
+      this.checklogin()
       wx.stopPullDownRefresh()
   },
 

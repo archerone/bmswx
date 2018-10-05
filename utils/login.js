@@ -1,7 +1,6 @@
 import cfg from '../common/config/index.js'
 let postUrl = cfg.domain;
 var utils = require('./util.js');
-const app = getApp()
 
 
 /*获取微信用户信息*/
@@ -17,6 +16,8 @@ function getuinfo(fn) {
             fail(){
               console.log('未授权1')
               wx.removeStorageSync('thirdsess')
+              wx.removeStorageSync('nickName');
+              wx.removeStorageSync('avatarUrl');
             }
           })
         }
@@ -42,8 +43,8 @@ function getuinfo(fn) {
 function wxlogin(fn){
     wx.showLoading("数据加载中");
     getuinfo(function(res){  //获取授权
-          app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl;
-          app.globalData.userInfo.nickName = res.userInfo.nickName;
+          wx.setStorageSync('avatarUrl',res.userInfo.avatarUrl);
+          wx.setStorageSync('nickName',res.userInfo.nickName);
 
           gologin(function(){ //登陆sess
               if(fn){
@@ -77,8 +78,10 @@ function checkwxse(fn1,fn2){
        success:function(){
           wx.hideLoading()
           getuinfo(function(res){
-                app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl?res.userInfo.avatarUrl:'https://res.beimsn.com/xcx/noavar.png';
-                app.globalData.userInfo.nickName = res.userInfo.nickName;
+                var avatarUrl = res.userInfo.avatarUrl?res.userInfo.avatarUrl:'https://res.beimsn.com/xcx/noavar.png';
+                var nickName = res.userInfo.nickName;
+                wx.setStorageSync('avatarUrl',avatarUrl);
+                wx.setStorageSync('nickName',nickName);
 
                 if(fn1){
                   fn1();
@@ -89,6 +92,8 @@ function checkwxse(fn1,fn2){
        fail:function(){
           wx.hideLoading()
           wx.removeStorageSync('thirdsess')
+          wx.removeStorageSync('nickName');
+          wx.removeStorageSync('avatarUrl');
           if(fn2){
             fn2();
           }
@@ -112,18 +117,24 @@ function checksess(fn1,fn2){
                       //若wx的session未过期,thirdsess过期,那再进行一次登录
                       wx.hideLoading()
                       wx.removeStorageSync('thirdsess')
+                      wx.removeStorageSync('nickName');
+                      wx.removeStorageSync('avatarUrl');
                       if(fn2){
                         fn2();
                       }
                   }
               },function(res){
                   wx.removeStorageSync('thirdsess')
+                  wx.removeStorageSync('nickName');
+                  wx.removeStorageSync('avatarUrl');
                   wx.hideLoading()
                   //utils.showModal('提示', res.errMsg,false);
               });
           }else{
               //若登录状态thirdsess被删
               wx.removeStorageSync('thirdsess')
+              wx.removeStorageSync('nickName');
+              wx.removeStorageSync('avatarUrl');
               wx.hideLoading()
               if(fn2){
                 fn2();
@@ -132,6 +143,8 @@ function checksess(fn1,fn2){
        },
        fail:function(){
           wx.removeStorageSync('thirdsess')
+          wx.removeStorageSync('nickName');
+          wx.removeStorageSync('avatarUrl');
           wx.hideLoading()
           if(fn2){
             fn2();

@@ -13,8 +13,7 @@ Page({
     nickName:'',
     litems:[],
     nomore:false,
-    islogin:false,
-    isplayer:true  //是否是游客状态
+    islogin:false
   },
   checklogin(){
      var that = this;
@@ -22,27 +21,37 @@ Page({
         that.setData({
           islogin: false
         })
+        that.getList();
      }else{
         utils.showLoading("数据加载中");
         login.checkwxse(function(){
             that.setData({
               islogin: true
             })
-            if(that.data.isplayer){
-                that.setData({
-                    page: 0,
-                    nomore:false,
-                    litems:[]
-                })
-                that.getList();
-            }
+            that.getList();
          },function(){
             that.setData({
               islogin: false
             })
+            that.getList();
+            utils.showModal('提示','微信登录过期,请重新登录',function(res){
+                if(res.confirm){
+                   wx.switchTab({
+                      url: '../user/user',
+                      success: function (e) {
+                        var page = getCurrentPages().pop();
+                        if (page == undefined || page == null) return;
+                        page.onLoad();
+                      }
+                   })
+                }else{
+                   
+                }
+            },function(){
+                
+            })
          })
      }
-     console.log(this.data.islogin)
   },
   scrollmore(){
     if(this.data.nomore){
@@ -66,6 +75,8 @@ Page({
       })
   },
   getin:function(){
+        app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
+        app.globalData.userInfo.avatarUrl = wx.getStorageSync('avatarUrl');
         var that = this;
         login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
             if(res.data.code == 702){
@@ -82,15 +93,7 @@ Page({
   },
   getList(){
       var that = this;
-      if(wx.getStorageSync('thirdsess')){
-          that.setData({
-            isplayer:false
-          })
-      }else{
-          that.setData({
-            isplayer:true
-          })
-      }
+      utils.showLoading("加载中...");
       utils.request('/api/bmsxcx/taste/list/getactlist',
           {
             num: that.data.page,
@@ -139,7 +142,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-      this.getList()
+      this.checklogin()
   },
 
   /**
@@ -152,7 +155,9 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-     this.checklogin()
+     //this.checklogin()
+     app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
+     app.globalData.userInfo.avatarUrl = wx.getStorageSync('avatarUrl');
   },
 
   /**

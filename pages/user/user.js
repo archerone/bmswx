@@ -29,6 +29,21 @@ Page({
       url: '../mylist/mylist?actid=' + actid+'&tid='+tid
     })
   },
+  refwx(){
+      var that = this;
+      utils.showLoading("加载中...");
+      login.checkwxse(function(){
+          that.setData({
+            islogin: true
+          })
+          that.getuact();
+      },function(){
+          that.setData({
+            islogin: false
+          })
+          that.getuact();
+      })
+  },
   getuact(){
       var that = this;
       that.setData({
@@ -94,6 +109,8 @@ Page({
   },
   wxlogout(){
      wx.removeStorageSync('thirdsess')
+     wx.removeStorageSync('nickName');
+     wx.removeStorageSync('avatarUrl');
      this.checklogin();
   },
   wxlogin(){
@@ -106,6 +123,8 @@ Page({
      })
   },
   getin:function(){  //登录活动服务器
+      app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
+      app.globalData.userInfo.avatarUrl = wx.getStorageSync('avatarUrl');
       var that = this;
       login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
         if(res.data.code == 702){
@@ -131,25 +150,19 @@ Page({
         })
      }else{
         utils.showLoading("数据加载中");
-        login.checkwxse(function(){
-            that.setData({
-              islogin: true
-            })
-            that.getuact();
-         },function(){
-            that.setData({
-              islogin: false,
-              joinlist:[],
-              winlist:[],
-              winactid:[],
-              joinactid:[]
-            })
-         })
+        that.setData({
+          islogin: true
+        })
+        that.getuact();
      }
   },
 
   onShow: function () {
-    this.checklogin()
+     if(!this.data.islogin){
+        this.checklogin()
+     }
+     app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
+     app.globalData.userInfo.avatarUrl = wx.getStorageSync('avatarUrl');
   },
 
   /**
@@ -170,9 +183,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    if(this.data.islogin){
-        this.getuact()
-    }
+    this.checklogin()
     wx.stopPullDownRefresh()
   },
 

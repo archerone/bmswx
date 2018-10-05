@@ -12,7 +12,7 @@ Page({
     nomore:false,
     sublist:[],
     type:null,
-    isplayer:true
+    islogin:false
   },
   gosub(){
     wx.switchTab({
@@ -27,25 +27,11 @@ Page({
         })
      }else{
         utils.showLoading("数据加载中");
-        login.checkwxse(function(){
-            that.setData({
-              islogin: true
-            })
-            if(that.data.isplayer){
-                that.setData({
-                    page: 0,
-                    nomore:false,
-                    sublist:[]
-                })
-                that.getList();
-            }
-         },function(){
-            that.setData({
-              islogin: false
-            })
-         })
+        that.setData({
+          islogin: true
+        })
      }
-     console.log(this.data.islogin)
+     that.getList();
   },
   /**
    * 生命周期函数--监听页面加载
@@ -55,7 +41,7 @@ Page({
         type:opts.type
       })
       console.log('load')
-      this.getList();
+      this.checklogin();
   },
 
   scrollmore() {
@@ -87,15 +73,6 @@ Page({
   },
   getList(){
       var that = this;
-      if(wx.getStorageSync('thirdsess')){
-          that.setData({
-            isplayer:false
-          })
-      }else{
-          that.setData({
-            isplayer:true
-          })
-      }
       utils.request('/api/bmsxcx/taste/list/getActlist',
           {
             num: that.data.page,
