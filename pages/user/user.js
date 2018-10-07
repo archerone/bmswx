@@ -115,11 +115,12 @@ Page({
   },
   wxlogin(){
      var that = this;
-     login.wxlogin(function(){
+     login.wxlogin(function(res){
         that.setData({
           islogin: true
         })
         that.getin();
+        //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData);
      })
   },
   getin:function(){  //登录活动服务器

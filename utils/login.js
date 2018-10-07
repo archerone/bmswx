@@ -43,12 +43,13 @@ function getuinfo(fn) {
 function wxlogin(fn){
     wx.showLoading("数据加载中");
     getuinfo(function(res){  //获取授权
+          console.log(res)
           wx.setStorageSync('avatarUrl',res.userInfo.avatarUrl);
           wx.setStorageSync('nickName',res.userInfo.nickName);
 
           gologin(function(){ //登陆sess
               if(fn){
-                fn();
+                fn(res);
               }
           });
           //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData)
@@ -84,7 +85,7 @@ function checkwxse(fn1,fn2){
                 wx.setStorageSync('nickName',nickName);
 
                 if(fn1){
-                  fn1();
+                  fn1(res);
                 }
                 //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData)
           })
