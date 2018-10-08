@@ -8,7 +8,7 @@ Page({
    */
   data: {
     openShare:false, //是否打开分享弹层
-    actid:null,  //活动id
+    actid:'',  //活动id
     actdata:[],  //活动详情数据
     status:0,    //活动状态,是否开奖(0未开奖,1开奖,2过期)
     iswin:0,     //是否中奖
@@ -18,16 +18,16 @@ Page({
     isbegin:false,  //活动是否开始
     isend:false,    //活动是否结束
     iscreat:false,  //当前用户是否已开团
-    actid:null,     //活动id
+    actid:'',     //活动id
     joinman:[],     //最新参与的8个用户
-    joinkey:null,   //分享时带的参数
-    sharekey:null,  //接收到的分享参数
-    gleader:null,   //团长
+    joinkey:'',   //分享时带的参数
+    sharekey:'',  //接收到的分享参数
+    gleader:'',   //团长
     isgetg:0,       //是否领取
     joineds:0,      //活动当前参与人数
     maxjoins:0,     //活动最大人数上限
     winmans:[],     //中奖名单
-    actname:null,    //奖项名称
+    actname:'',    //奖项名称
     islogin:false
   },
   gohome(){ //返回主页
@@ -129,45 +129,28 @@ Page({
   getact(){   //获取活动信息
       var that = this;
       utils.showLoading("加载中...");
-      if(that.data.sharekey){  //受邀打开页面
-          utils.request('/api/bmsxcx/taste/list/getActinfo',
-              {
-                actid: that.data.actid,
-                sharekey: that.data.sharekey
-              },
-              "POST", 2, function (res) {
-              wx.hideLoading()
-              console.log(res)
-              if(res.data.groupmans){
-                that.initact(res);
-              }
-          },function(res){
-              wx.hideLoading()
-              //utils.showModal('提示', res.errMsg,false);
-          });
-      }else{
-          utils.request('/api/bmsxcx/taste/list/getActinfo',
-              {
-                actid: that.data.actid
-              },
-              "POST", 2, function (res) {
-              wx.hideLoading()
-              console.log(res)
-              if(res.data.rescode==0){
-                  wx.showToast({
-                      title: res.data.msg,
-                      icon: 'none',
-                      duration: 2000
-                  })
-              }else{
-                  that.initact(res);
-              }
-
-          },function(res){
-              wx.hideLoading()
-              //utils.showModal('提示', res.errMsg,false);
-          });
-      }
+      utils.request('/api/bmsxcx/taste/list/getActinfo',
+          {
+            actid: that.data.actid,
+            sharekey: that.data.sharekey
+          },
+          "POST", 2, function (res) {
+          wx.hideLoading()
+          if(res.data.sesscode==602){
+              that.initact(res);
+          }else{ //若sess过期
+              wx.removeStorageSync('thirdsess')
+              wx.removeStorageSync('nickName');
+              wx.removeStorageSync('avatarUrl');
+              that.setData({
+                  islogin:false
+              })
+              that.initact(res);
+          }
+      },function(res){
+          wx.hideLoading()
+          //utils.showModal('提示', res.errMsg,false);
+      });
   },
   initact(res){  //初始化活动信息
         var that = this;

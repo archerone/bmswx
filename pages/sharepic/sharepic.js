@@ -8,11 +8,11 @@ Page({
    * 页面的初始数据
    */
   data: {
-    shareImgurl:null,
-    imgurl:null,
-    endtime:null,
-    actid:null,
-    sharekey:null,
+    shareImgurl:'',
+    imgurl:'',
+    endtime:'',
+    actid:'',
+    sharekey:'',
     sharetype:1,
     islogin:false,
     showModal: false

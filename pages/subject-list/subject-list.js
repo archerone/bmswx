@@ -11,7 +11,7 @@ Page({
     size:3,
     nomore:false,
     sublist:[],
-    type:null,
+    type:'',
     islogin:false
   },
   gosub(){

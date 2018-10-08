@@ -8,7 +8,7 @@ Page({
     actid:[],
     nomore:false,
     mylist:[],
-    tid:null
+    tid:''
   },
   gouser(){
     wx.switchTab({
