@@ -13,6 +13,8 @@ Page({
     status:0,    //活动状态,是否开奖(0未开奖,1开奖,2过期)
     iswin:0,     //是否中奖
     isfull:false,//团是否满员
+    begintimes:0,
+    endtimes:0,
     otimes:0,    //距离结束开奖时间
     stimes:0,    //距离活动开始时间
     isbegin:false,  //活动是否开始
@@ -43,7 +45,7 @@ Page({
   joingroup(){ //加入团队
       app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
       var that = this;
-      utils.showModal('提示','入团后无法加入其它团',function(res){
+      utils.showModal('提示','组队后无法加入其它队伍',function(res){
           if(res.confirm){
               utils.request('/api/bmsxcx/taste/login/joins',
                   {
@@ -96,7 +98,7 @@ Page({
   opengroup(){  //开团
       var that = this;
       app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
-      utils.showModal('提示','开团后不能参与其它团',function(res){
+      utils.showModal('提示','组队后不能参与其它队伍',function(res){
           if(res.confirm){
               utils.request('/api/bmsxcx/taste/login/joins',
                   {
@@ -136,17 +138,15 @@ Page({
           },
           "POST", 2, function (res) {
           wx.hideLoading()
-          if(res.data.sesscode==602){
-              that.initact(res);
-          }else{ //若sess过期
+          if(res.data.sesscode==604){
               wx.removeStorageSync('thirdsess')
               wx.removeStorageSync('nickName');
               wx.removeStorageSync('avatarUrl');
               that.setData({
                   islogin:false
               })
-              that.initact(res);
           }
+          that.initact(res);
       },function(res){
           wx.hideLoading()
           //utils.showModal('提示', res.errMsg,false);
@@ -164,6 +164,10 @@ Page({
         var otimes = utils.getRemainderTime(otime)
         var stime = begin - now;
 
+        that.setData({
+            begintimes:begin,
+            endtimes:end
+        })
         if(res.data.status==1){
             that.setData({
                 winmans:res.data.winmans
@@ -199,7 +203,7 @@ Page({
         if(stime>0){ //未到开始时间,倒计时
             app.globalData.userInfo.timestart = null;
             clearInterval(app.globalData.userInfo.timestart);
-            app.globalData.userInfo.timend = setInterval(function(){
+            app.globalData.userInfo.timestart = setInterval(function(){
                 if(stime<=0){
                    clearInterval(app.globalData.userInfo.timestart);
                    that.checktime(begin,end)
@@ -256,7 +260,6 @@ Page({
       }
   },
   gosharePic: function (e) {  //跳转至画图页面
-    console.log('dddddd',e.currentTarget.dataset.ishow)
     if(e.currentTarget.dataset.ishow==2){
       var _url = '../sharepic/sharepic?imgurl='+this.data.actdata.actimg+'&actname='+this.data.actname+'&sharetype=2';
     }else{
@@ -398,7 +401,50 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    //this.checklogin()
+      //this.checklogin()
+      var that = this;
+      if(!this.data.begintimes || !this.data.endtimes){
+          return false;
+      }
+      var now = new Date().getTime();
+      var end = this.data.endtimes;
+      var begin = this.data.begintimes;
+      var otime = end - now;
+      var otimes = utils.getRemainderTime(otime)
+      var stime = begin - now;
+
+      if(stime>0){ //未到开始时间,倒计时
+            app.globalData.userInfo.timestart = null;
+            clearInterval(app.globalData.userInfo.timestart);
+            app.globalData.userInfo.timestart = setInterval(function(){
+                if(stime<=0){
+                   clearInterval(app.globalData.userInfo.timestart);
+                   that.checktime(begin,end)
+                    return false;
+                }
+                stime-=1000;
+                that.setData({
+                  stimes: utils.getRemainderTime(stime)
+                })
+            },1000);
+      }
+      if(otime>0){  //活动还未结束时,倒计时
+            app.globalData.userInfo.timend = null;
+            clearInterval(app.globalData.userInfo.timend);
+            app.globalData.userInfo.timend = setInterval(function(){
+               if(otime<=0){
+                  clearInterval(app.globalData.userInfo.timend);
+                  that.checktime(begin,end)
+                  return false;
+               }
+               otime-=1000;
+               otimes = utils.getRemainderTime(otime)
+               that.setData({
+                  otimes: otimes
+               })
+            },1000)
+      }
+
   },
   /**
    * 生命周期函数--监听页面隐藏
@@ -439,7 +485,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: '快来拼团抽奖',
+      title: '一起来组队抽奖,试用产品',
       path: '/pages/detail/detail?actid='+this.data.actid+'&sharekey='+this.data.joinkey,
       success:function(res){
           console.log('33')

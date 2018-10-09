@@ -8,11 +8,14 @@
         <image class="poster" lazy-load="true" src="{{actdata.actimg}}" />
         <view class="infos">
           <view class="infos_text">奖品:{{actdata.actname}}</view>
-          <view class="infos_ico" wx:if="{{actdata.actype==1}}">拼团</view>
+          <view class="infos_ico" wx:if="{{actdata.actype==1}}">组队</view>
           <view class="infos_ico" wx:if="{{actdata.actype==2}}">问卷</view>
         </view>
         <view class="infos">
-          <text class="infos_time">{{actdata.endtime}} 自动开奖</text>
+          <text class="infos_time">活动规则: 邀请好友参与活动,满足人数后参与成功</text>
+        </view>
+        <view class="infos">
+          <text class="infos_time">截止时间: {{actdata.endtime}}</text>
         </view>
         <view class="infos_resu" wx:if="{{status==1}}">
            <view wx:if="{{iswin==0}}">
@@ -33,12 +36,12 @@
             <button open-type="getUserInfo" bindgetuserinfo="wxlogin" class="item_btn">微信登录</button>
         </block>
         <block wx:else>
-            <button class="item_btn" bindtap="opengroup" wx:if="{{status==0 && !iscreat && isbegin && !isend}}">开团参与</button>
-            <button class="item_btn" bindtap="joingroup" wx:if="{{status==0 && iscreat && isbegin && !isend && sharekey && !isfull}}">加入{{gleader}}的团参与抽奖</button>
-            <button class="item_btn" bindtap="goInvite" wx:if="{{status==0 && !isfull && iscreat && isbegin && !isend && !sharekey}}">邀请朋友组队</button>
+            <button class="item_btn" bindtap="opengroup" wx:if="{{status==0 && !iscreat && isbegin && !isend}}">创建队伍</button>
+            <button class="item_btn" bindtap="joingroup" wx:if="{{status==0 && iscreat && isbegin && !isend && sharekey && !isfull}}">加入{{gleader}}的队伍参与抽奖</button>
+            <button class="item_btn" bindtap="goInvite" wx:if="{{status==0 && !isfull && iscreat && isbegin && !isend && !sharekey}}">邀请朋友参与</button>
             <button class="item_btn item_btn2" wx:if="{{status==0 && !isbegin}}">活动未开始</button>
             <button class="item_btn item_btn2" wx:if="{{status==0 && isend}}">活动已结束,1~3日内公布结果</button>
-            <button class="item_btn item_btn2" wx:if="{{status==0 && isfull && !isend}}">组团成功，等待开奖</button>
+            <button class="item_btn item_btn2" wx:if="{{status==0 && isfull && !isend}}">组队成功，等待开奖</button>
         </block>
         <view class='item_btime'>
             <view class="item_btime_txt" wx:if="{{status==0 && !isend && isbegin}}">距离结束开奖:{{otimes}}</view>
@@ -58,8 +61,8 @@
     </view>
     <view class="list-item2" wx:if="{{islogin}}">
         <view class="list-item2-tit">
-          <text class="item2-tit">已参团好友\n</text>
-          <text class="item2-txt">{{actdata.groupnum}}人组团获得抽奖资格\n中奖后团成员每人均获得一份相同奖品</text>
+          <text class="item2-tit">已参与好友\n</text>
+          <text class="item2-txt">队伍人数不足{{actdata.groupnum}}人将无法参与抽奖</text>
         </view>
         <view class="peobox">
            <view class="peo_item" wx:for="{{actdata.groupmans}}" wx:key="{{index}}" wx:for-item="mans">
@@ -68,7 +71,7 @@
            </view>
            <view class="peo_item" wx:if="{{!iscreat && isbegin}}" bindtap="opengroup">
               <image class="peo_pic" src='../../assets/image/icon-add.png'></image>
-              <view class='peo_name peo_add'>开团参与</view>
+              <view class='peo_name peo_add'>创建队伍</view>
            </view>
            <view class="peo_item" wx:if="{{!isfull && iscreat && !isend }}" bindtap="goInvite">
               <image class="peo_pic" src='../../assets/image/icon-add.png'></image>
@@ -91,7 +94,7 @@
          活动名额：活动上限为{{maxjoins}}人,当前人数为{{joineds}}
        </view>
        <view class="item3_info">
-         中奖规则：组团人数满足{{actdata.groupnum}}人时,组团成功,可以参与抽奖。用户只能进入一个团,开团或加入一个团后不能退出。
+         中奖规则：队伍人数满足{{actdata.groupnum}}人时,组队成功,可以参与抽奖。每期活动用户只能进入一个队伍,创建或加入一个队伍后不能退出。
        </view>
     </view>
     <view class="list-item4">

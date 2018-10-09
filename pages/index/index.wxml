@@ -9,10 +9,10 @@
           <image class="poster" bindtap='goDetail' data-actid="{{litemData.id}}" lazy-load="true" src="{{litemData.actimg}}" />
           <view class="infos">
             <view class="infos_text">奖品: {{litemData.actname}}</view>
-            <view class="infos_ico">拼团</view>
+            <view class="infos_ico">组队</view>
           </view>
           <view class="infos">
-            <text class="infos_time">{{litemData.begintime}} 自动开奖</text>
+            <text class="infos_time">活动截止时间: {{litemData.endtime}}</text>
           </view>
           <image class="isjoin" wx:if="{{litemData.isjoin && !litemData.isend}}" src="../../assets/image/icon-tag.png"></image>
           <image class="isjoin" wx:if="{{litemData.isend}}" src="../../assets/image/icon-tag2.png"></image>
@@ -24,7 +24,7 @@
             <view class="infos_ico">问卷</view>
           </view>
           <view class="infos">
-            <text class="infos_time">提示：关注顶部公众号，生成详细测试报告</text>
+            <text class="infos_time">提示:关注公众号"贝美森生物科技",生成详细报告</text>
           </view>
       </block>
     </view>
