@@ -12,7 +12,7 @@ Page({
         type: 2
       },
       {
-        name: '组团活动',
+        name: '组队活动',
         img: '/assets/image/ztuan.png',
         type: 1
       }

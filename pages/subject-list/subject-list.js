@@ -126,7 +126,7 @@ Page({
       var that = this;
       if(this.data.type==1){
         wx.setNavigationBarTitle({
-          title: '活动分类-组团活动列表'
+          title: '活动分类-组队活动列表'
         })
       }else if(this.data.type==2){
         wx.setNavigationBarTitle({

@@ -9,10 +9,10 @@
 		          <image class="poster" bindtap='goDetail' data-actid="{{litemData.id}}" lazy-load="true" src="{{litemData.actimg}}" />
 		          <view class="infos">
 		            <view class="infos_text">奖品: {{litemData.actname}}</view>
-		            <view class="infos_ico">拼团</view>
+		            <view class="infos_ico">组队</view>
 		          </view>
 		          <view class="infos">
-		            <text class="infos_time">{{litemData.begintime}} 自动开奖</text>
+		            <text class="infos_time">截止时间: {{actdata.endtime}}</text>
 		          </view>
 		          <image class="isjoin" wx:if="{{litemData.isjoin && !litemData.isend}}" src="../../assets/image/icon-tag.png"></image>
 		          <image class="isjoin" wx:if="{{litemData.isend}}" src="../../assets/image/icon-tag2.png"></image>

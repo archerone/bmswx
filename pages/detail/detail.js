@@ -12,19 +12,19 @@ Page({
     actdata:[],  //活动详情数据
     status:0,    //活动状态,是否开奖(0未开奖,1开奖,2过期)
     iswin:0,     //是否中奖
-    isfull:false,//团是否满员
+    isfull:false,//队是否满员
     begintimes:0,
     endtimes:0,
     otimes:0,    //距离结束开奖时间
     stimes:0,    //距离活动开始时间
     isbegin:false,  //活动是否开始
     isend:false,    //活动是否结束
-    iscreat:false,  //当前用户是否已开团
+    iscreat:false,  //当前用户是否已开队
     actid:'',     //活动id
     joinman:[],     //最新参与的8个用户
     joinkey:'',   //分享时带的参数
     sharekey:'',  //接收到的分享参数
-    gleader:'',   //团长
+    gleader:'',   //队长
     isgetg:0,       //是否领取
     joineds:0,      //活动当前参与人数
     maxjoins:0,     //活动最大人数上限
@@ -42,7 +42,7 @@ Page({
           url: '../gprize/gprize'
       })
   },
-  joingroup(){ //加入团队
+  joingroup(){ //加入队
       app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
       var that = this;
       utils.showModal('提示','组队后无法加入其它队伍',function(res){
@@ -95,7 +95,7 @@ Page({
           //utils.showModal('提示', res.errMsg,false);
       });
   },
-  opengroup(){  //开团
+  opengroup(){  //开队
       var that = this;
       app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
       utils.showModal('提示','组队后不能参与其它队伍',function(res){
