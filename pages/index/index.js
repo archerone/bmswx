@@ -45,10 +45,10 @@ Page({
                       }
                    })
                 }else{
-                   
+
                 }
             },function(){
-                
+
             })
          })
      }
@@ -73,23 +73,6 @@ Page({
       wx.reLaunch({
         url: _url
       })
-  },
-  getin:function(){
-        app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
-        app.globalData.userInfo.avatarUrl = wx.getStorageSync('avatarUrl');
-        var that = this;
-        login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
-            if(res.data.code == 702){
-                console.log(res.data.msg);
-                that.getList();
-            }else{
-                wx.showToast({
-                  title: res.data.msg,
-                  icon: 'none',
-                  duration: 1000
-                })
-            }
-        })
   },
   getList(){
       var that = this;
@@ -178,7 +161,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-      
+
   },
 
   /**

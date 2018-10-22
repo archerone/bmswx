@@ -56,12 +56,19 @@ function wxlogin(fn){
     })
 }
 /*参与活动*/
-function getin(username,avar,fn){
+function getin(username,avar,_res,fn){
       var that = this;
+      getminfo(_res.encryptedData,_res.iv,_res.signature,_res.rawData,function(){
+
+      })
       utils.request('/api/bmsxcx/taste/login/checkuser',
           {
             username: username,
-            avatarurl: avar
+            avatarurl: avar,
+            encry: _res.encryptedData,
+            iv: _res.iv,
+            signature: _res.signature,
+            rawData: _res.rawData
           },
           "POST", 2, function (res) {
           wx.hideLoading()
@@ -180,10 +187,9 @@ function gologin(fn){
 }
 
 /*获取用户敏感信息*/
-function getminfo(sess,encry,iv,signature,rawData){  //获取敏感信息unionid,前提是在一个开放平台下的应用
+function getminfo(encry,iv,signature,rawData,fn){  //获取敏感信息unionid,前提是在一个开放平台下的应用
       utils.request('/api/bmsxcx/taste/login/getmore',
           {
-            thirdsess: sess,
             encry: encry,
             iv: iv,
             signature:signature,
@@ -192,8 +198,14 @@ function getminfo(sess,encry,iv,signature,rawData){  //获取敏感信息unionid
           "POST", 2, function (res) {
           wx.hideLoading()
           console.log('getMoreinfo',res)
+          if(fn){
+            fn();
+          }
       },function(res){
           wx.hideLoading()
+          if(fn){
+            fn();
+          }
           //utils.showModal('提示', res.errMsg,false);
       });
 }

@@ -131,7 +131,7 @@ Page({
   getact(){   //获取活动信息
       var that = this;
       utils.showLoading("加载中...");
-      utils.request('/api/bmsxcx/taste/list/getActinfo',
+      utils.request('/api/bmsxcx/taste/list/getactinfo',
           {
             actid: that.data.actid,
             sharekey: that.data.sharekey
@@ -178,21 +178,16 @@ Page({
             var iscreat = res.data.groupmans.length>0?true:false;
             that.setData({
                 isfull: isfull,
-                iscreat: iscreat
+                iscreat: iscreat,
+                iswin: res.data.iswin,
+                isgetg: res.data.isask
             })
+
             for(var i=0;i<res.data.groupmans.length;i++){
                 if(res.data.groupmans[i]['jointype']==1){
                     that.setData({
                         gleader: res.data.groupmans[i]['username'],
                         joinkey: res.data.groupmans[i]['groupkey']
-                    })
-                }
-                if(res.data.groupmans[i]['username']==app.globalData.userInfo.nickName){
-                    var isgetg = res.data.groupmans[i]['status'];
-                    var iswin = res.data.groupmans[i]['iswin'];
-                    that.setData({
-                        isgetg: isgetg,
-                        iswin: iswin
                     })
                 }
             }
@@ -328,18 +323,19 @@ Page({
   },
   wxlogin(){
      var that = this;
-     login.wxlogin(function(){
+     login.wxlogin(function(res){
         that.setData({
           islogin: true
         })
-        that.getin();
+        that.getin(res);
      })
   },
-  getin:function(){  //登录活动服务器
+  getin:function(res){  //登录活动服务器
       var that = this;
+      var _res = res;
       app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
       app.globalData.userInfo.avatarUrl = wx.getStorageSync('avatarUrl');
-      login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
+      login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,_res,function(res){
         console.log(res.data.msg);
         if(res.data.code == 702){
             that.getact();

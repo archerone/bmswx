@@ -8,12 +8,12 @@ Page({
     types: [
       {
         name: '问卷测试',
-        img: '/assets/image/test.png',
+        img: 'https://res.beimsn.com/images/xcx/test.png',
         type: 2
       },
       {
         name: '组队活动',
-        img: '/assets/image/ztuan.png',
+        img: 'https://res.beimsn.com/images/xcx/ztuan.png',
         type: 1
       }
     ]

@@ -1,11 +1,12 @@
 /* pages/gprize.wxss */
+page{background:#f6f7f9;}
 .item_btn{width:638rpx;height:82rpx;background:#546bff;line-height:81rpx;color:#fff;font-size:30rpx;border-radius:55rpx;margin-top:60rpx;box-shadow: 0px 0px 15rpx #c4cbff;}
-.box{ width:750rpx;height:100%;background:#f6f7f9;position:relative;}
+.box{ width:750rpx;height:100%;background:#f6f7f9;position:relative;top:100rpx;margin-bottom:40rpx;}
 .bg{ width:750rpx;height:217rpx;}
 .prize_box{width:690rpx;height:410rpx;border-radius:10rpx;margin:0 auto;background:#fff;position:relative;}
 .icon_1{width:130rpx;height:144rpx;position:absolute;left:50%;margin-left:-65rpx;top:-77rpx;}
 .tit{text-align:center;position:relative;top:80rpx;color:#ff5d5d;font-size:34px;}
 .info{width:80%;margin:0 auto;color:#353535;text-align:center;position:relative;top:100rpx;font-size:22px;}
 .info text{color:#546bff;}
-.kf{width:220rpx;height:220rpx;display:block;margin:100rpx auto 40rpx;}
+.kf{width:220rpx;height:220rpx;display:block;margin:60rpx auto 40rpx;}
 .kf_t{text-align:center;font-size:26rpx;}

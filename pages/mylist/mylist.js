@@ -59,6 +59,7 @@ Page({
 
   getList(){
       var that = this;
+      utils.showLoading("数据加载中");
       utils.request('/api/bmsxcx/taste/list/getmylist',
           {
             num: that.data.page,

@@ -17,7 +17,7 @@
         <view class="infos">
           <text class="infos_time">截止时间: {{actdata.endtime}}</text>
         </view>
-        <view class="infos_resu" wx:if="{{status==1}}">
+        <view class="infos_resu" wx:if="{{status==1 && islogin}}">
            <view wx:if="{{iswin==0}}">
               <image src='../../assets/image/icon-failure.png' class="resu_img"></image>
               <view class="resu_txt resu_txtok">很遗憾，你未中奖</view>
@@ -84,6 +84,9 @@
          活动详情
        </view>
        <view class="item3_info">
+        参与资格：限已关注“贝美森生物科技”公众号的用户
+       </view>
+       <view class="item3_info">
         活动开始时间：{{actdata.begintime}}
        </view>
        <view class="item3_info">活动结束时间：{{actdata.endtime}}</view>
@@ -94,7 +97,7 @@
          活动名额：活动上限为{{maxjoins}}人,当前人数为{{joineds}}
        </view>
        <view class="item3_info">
-         中奖规则：队伍人数满足{{actdata.groupnum}}人时,组队成功,可以参与抽奖。每期活动用户只能进入一个队伍,创建或加入一个队伍后不能退出。
+         中奖规则：队伍人数满足{{actdata.groupnum}}人时,组队成功,可以参与抽奖。每期活动用户只能进入一个队伍,创建或加入一个队伍后不能退出。中奖名额将在已关注公众号的用户中随机产生,公布。
        </view>
     </view>
     <view class="list-item4">

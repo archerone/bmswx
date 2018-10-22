@@ -135,8 +135,8 @@ Page({
         wx.getImageInfo({
           src: app.globalData.userInfo.avatarUrl,
           success: function (res) {
-            var ileft = 0.416 * ow; (312 / 750)
-            var itop = 0.16 * oh;
+            var ileft = 0.416 * ow;
+            var itop = 0.273 * ow;
             var iw = 128 / 750 * ow;
             //var ih = ow / res.width * res.height
             //var itop = 0.178 * oh;
@@ -145,7 +145,7 @@ Page({
               src: "../../assets/image/head-pic.png",
               success: function (res) {
                 var ileft = 0.41 * ow; // (308/750)
-                var itop = 0.14 * oh; // (37/1195)
+                var itop = 0.24 * ow; // (37/1195)
                 var iw = 135 / 750 * ow;
                 var ih = 161 / 750 * ow;
                 ctx.drawImage("../../" + res.path, ileft, itop, iw, ih)
@@ -156,7 +156,7 @@ Page({
                 var nlen = uname.length;
                 var zlen = fz * nlen;
                 var ileft = ow / 2
-                var itop = 350 / 750 * ow;
+                var itop = 0.5 * ow;
                 ctx.setFontSize(fz)         // 文字字号：22px
                 ctx.fillText(uname, ileft, itop + fz / 2)
 
@@ -173,7 +173,7 @@ Page({
           src: 'https:'+_this.data.imgurl,
           success: function (res) {
             var ileft = 0.135 * ow; // (26/750)
-            var itop = 0.38 * oh;
+            var itop = 0.65 * ow;
             var iw = imgw/750 *ow;
             var ih = imgh / imgw * iw;
             ctx.drawImage(res.path, ileft, itop, iw, ih)
@@ -184,7 +184,7 @@ Page({
             var nlen = str2.length;
             var zlen = fz * nlen;
             var ileft = ow *300/750;
-            var itop = 400 / 750 * ow;
+            var itop = 0.58 * ow;
             ctx.setFontSize(fz)         // 文字字号：22px
             ctx.fillText(str2, ileft, itop + fz / 2)
             //奖品名文字
@@ -194,7 +194,7 @@ Page({
             var nlen = str1.length;
             var zlen = fz * nlen;
             var ileft = ow *200/750;
-            var itop = 760 / 750 * ow;
+            var itop = 1.08 * ow;
             ctx.setFontSize(fz)         // 文字字号：22px
             ctx.fillText(str1, ileft, itop + fz / 2)
             resolve();
@@ -208,7 +208,7 @@ Page({
           src: 'https://res.beimsn.com/images/xcx/bmsxcx.jpg',
           success: function (res) {
             var ileft = 0.36 * ow; //(312 / 750)
-            var itop = 0.66 * oh;
+            var itop = 1.18 * ow;
             var iw = 200 / 750 * ow;
             //var ih = ow / res.width * res.height
             //var itop = 0.178 * oh;
@@ -220,7 +220,7 @@ Page({
             var nlen = str3.length;
             var zlen = fz * nlen;
             var ileft = ow *200/750;
-            var itop = 1050 / 750 * ow;
+            var itop = 1.52 * ow;
             ctx.setFontSize(fz)         // 文字字号：22px
             ctx.fillText(str3, ileft, itop + fz / 2)
             resolve();
@@ -301,7 +301,7 @@ Page({
           src: 'https:'+_this.data.imgurl,
           success: function (res) {
             var ileft = 0.0346 * ow; // (26/750)
-            var itop = 0.196 * oh;
+            var itop = 0.3 * ow;
             var iw = imgw/750 *ow;
             var ih = imgh / imgw * iw;
             ctx.drawImage(res.path, ileft, itop, iw, ih)
@@ -309,7 +309,7 @@ Page({
               src: "../../assets/image/sharebg.png",
               success: function (res2) {
                 var ih = ow / res2.width * res2.height
-                var itop = 0.178 * oh;
+                var itop = 0.27 * ow;
                 ctx.drawImage("../../" + res2.path, 0, itop, ow, ih)
                 //奖品名文字
                 ctx.setTextAlign('left')    // 文字居中
@@ -344,7 +344,7 @@ Page({
           success: function (res) {
             console.log(res)
             var ileft = 0.416 * ow; (312 / 750)
-            var itop = 0.033 * oh;
+            var itop = 0.033 * ow;
             var iw = 128 / 750 * ow;
             //var ih = ow / res.width * res.height
             //var itop = 0.178 * oh;
@@ -353,7 +353,7 @@ Page({
               src: "../../assets/image/cov.png",
               success: function (res) {
                 var ileft = 0.41 * ow; // (308/750)
-                var itop = 0.031 * oh; // (37/1195)
+                var itop = 0.031 * ow; // (37/1195)
                 var iw = 135 / 750 * ow;
                 ctx.drawImage("../../" + res.path, ileft, itop, iw, iw)
                 //用户名

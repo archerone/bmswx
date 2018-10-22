@@ -119,15 +119,16 @@ Page({
         that.setData({
           islogin: true
         })
-        that.getin();
+        that.getin(res);
         //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData);
      })
   },
-  getin:function(){  //登录活动服务器
+  getin:function(res){  //登录活动服务器
+      var _res = res;
       app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
       app.globalData.userInfo.avatarUrl = wx.getStorageSync('avatarUrl');
       var that = this;
-      login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,function(res){
+      login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,_res,function(res){
         if(res.data.code == 702){
             that.getuact()
         }else{

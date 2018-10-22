@@ -39,10 +39,10 @@ function request(url, data, method, headertype, successCallback, failCallback, c
                 showModal('提示',res.data.msg,function(res){
                   if(res.confirm){
                       var pages = getCurrentPages()
-                      var currentPage = pages[pages.length-1] 
+                      var currentPage = pages[pages.length-1]
                       console.log(currentPage,currentPage.options.sharekey)
                       if(currentPage.options.sharekey){
-                          var url = '/'+currentPage.route+'?actid='+currentPage.options.actid+'&sharekey='+currentPage.options.sharekey; 
+                          var url = '/'+currentPage.route+'?actid='+currentPage.options.actid+'&sharekey='+currentPage.options.sharekey;
                       }
                       else{
                           var url = '/'+currentPage.route+'?actid='+currentPage.options.actid;
@@ -63,8 +63,8 @@ function request(url, data, method, headertype, successCallback, failCallback, c
                       }
                   }else{
                       var pages = getCurrentPages()
-                      var currentPage = pages[pages.length-1] 
-                      var url = '/'+currentPage.route+'?actid='+currentPage.options.actid 
+                      var currentPage = pages[pages.length-1]
+                      var url = '/'+currentPage.route+'?actid='+currentPage.options.actid
                       if(currentPage.route=="pages/detail/detail"){
                           wx.redirectTo({
                             url: url
