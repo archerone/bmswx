@@ -10,11 +10,12 @@ function getuinfo(fn) {
         if (!res.authSetting['scope.userInfo']) {  //若拿不到授权信息
           wx.authorize({
             scope: 'scope.userInfo',
-            success() {
+            success(res) {
 
             },
             fail(){
               console.log('未授权1')
+              wx.hideLoading()
               wx.removeStorageSync('thirdsess')
               wx.removeStorageSync('nickName');
               wx.removeStorageSync('avatarUrl');
@@ -39,36 +40,72 @@ function getuinfo(fn) {
       }
     })
 }
+
 /*用微信授权登录,成功后参与活动*/
+var u_code = null;
+var u_res = null;
 function wxlogin(fn){
-    wx.showLoading("数据加载中");
-    getuinfo(function(res){  //获取授权
-          console.log(res)
-          wx.setStorageSync('avatarUrl',res.userInfo.avatarUrl);
-          wx.setStorageSync('nickName',res.userInfo.nickName);
-
-          gologin(function(){ //登陆sess
-              if(fn){
-                fn(res);
+    //p1.获取code
+    const p1 = new Promise(function(resolve, reject){
+        wx.showLoading("数据加载中");
+        wx.login({
+            success: wxres => {
+              if(wxres.code){
+                u_code = wxres.code;
+                resolve();
+              }else{
+                reject()
               }
-          });
-          //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData)
+            }
+        })
     })
-}
-/*参与活动*/
-function getin(username,avar,_res,fn){
-      var that = this;
-      getminfo(_res.encryptedData,_res.iv,_res.signature,_res.rawData,function(){
+    //p2.获取用户信息
+    const p2 = new Promise(function(resolve, reject){
+        wx.showLoading("数据加载中");
+        getuinfo(function(res){
+            console.log(res)
+            wx.setStorageSync('avatarUrl',res.userInfo.avatarUrl);
+            wx.setStorageSync('nickName',res.userInfo.nickName);
+            u_res = res;
+            resolve();
 
-      })
+        })
+    })
+
+    //生成thirdsess,保存openid和sesskey
+    Promise.all([p1,p2]).then(function () {
+       console.log('getopenid');
+       utils.request('/api/bmsxcx/taste/login/getopenid', {code: u_code}, "POST", 2, function (res) {
+            wx.hideLoading()
+            console.log('登录微信成功')
+            if(res.data.code == 702){
+                wx.setStorageSync('thirdsess', res.data.access_token);
+                if(fn){
+                   fn();
+                }
+            }
+       },function(res){
+            wx.hideLoading()
+       });
+    }, function (err) {
+
+    })
+
+
+}
+
+/*参与活动*/
+function getin(fn){
+      var that = this;
+
       utils.request('/api/bmsxcx/taste/login/checkuser',
           {
-            username: username,
-            avatarurl: avar,
-            encry: _res.encryptedData,
-            iv: _res.iv,
-            signature: _res.signature,
-            rawData: _res.rawData
+            username: wx.getStorageSync('nickName'),
+            avatarurl: wx.getStorageSync('avatarUrl'),
+            encry: u_res.encryptedData,
+            iv: u_res.iv,
+            signature: u_res.signature,
+            rawData: u_res.rawData
           },
           "POST", 2, function (res) {
           wx.hideLoading()
@@ -80,6 +117,7 @@ function getin(username,avar,_res,fn){
           //utils.showModal('提示', res.errMsg,false);
       });
 }
+
 //仅判断客户端和微信端sess是否过期,页面见切换时用到
 function checkwxse(fn1,fn2){
    wx.checkSession({
@@ -94,7 +132,7 @@ function checkwxse(fn1,fn2){
                 if(fn1){
                   fn1(res);
                 }
-                //login.getminfo(wx.getStorageSync('thirdsess'),res.encryptedData,res.iv,res.signature,res.rawData)
+
           })
        },
        fail:function(){
@@ -107,83 +145,6 @@ function checkwxse(fn1,fn2){
           }
        }
     });
-}
-/*微信第三方后台会话状态判断,登录时用到*/
-function checksess(fn1,fn2){
-    var thirdsess = wx.getStorageSync('thirdsess');
-    wx.checkSession({
-       success:function(){
-          if(thirdsess){  //wx的session未过期,还需判断thirdsess是否过期
-              utils.request('/api/bmsxcx/taste/login/islogin', {thirdsess: thirdsess}, "POST", 2, function (res) {
-                  wx.hideLoading()
-                  if(res.data==1){ //1,已登录
-                      console.log('wx.session未过期;thirdsess也未过期,已刷新');
-                      if(fn1){
-                        fn1();
-                      }
-                  }else{//0,未登录
-                      //若wx的session未过期,thirdsess过期,那再进行一次登录
-                      wx.hideLoading()
-                      wx.removeStorageSync('thirdsess')
-                      wx.removeStorageSync('nickName');
-                      wx.removeStorageSync('avatarUrl');
-                      if(fn2){
-                        fn2();
-                      }
-                  }
-              },function(res){
-                  wx.removeStorageSync('thirdsess')
-                  wx.removeStorageSync('nickName');
-                  wx.removeStorageSync('avatarUrl');
-                  wx.hideLoading()
-                  //utils.showModal('提示', res.errMsg,false);
-              });
-          }else{
-              //若登录状态thirdsess被删
-              wx.removeStorageSync('thirdsess')
-              wx.removeStorageSync('nickName');
-              wx.removeStorageSync('avatarUrl');
-              wx.hideLoading()
-              if(fn2){
-                fn2();
-              }
-          }
-       },
-       fail:function(){
-          wx.removeStorageSync('thirdsess')
-          wx.removeStorageSync('nickName');
-          wx.removeStorageSync('avatarUrl');
-          wx.hideLoading()
-          if(fn2){
-            fn2();
-          }
-       }
-    });
-}
-
-/*登录第三方后台获取thirdsess*/
-function gologin(fn){
-    wx.login({
-          success: wxres => {
-            // 发送 res.code 到后台换取 openId, sessionKey, unionId
-            if(wxres.code){
-                console.log('getopenid');
-                utils.request('/api/bmsxcx/taste/login/getopenid', {code: wxres.code}, "POST", 2, function (res) {
-                    wx.hideLoading()
-                    console.log('登录微信成功')
-                    if(res.data.code == 702){
-                        wx.setStorageSync('thirdsess', res.data.access_token);
-                        if(fn){
-                          fn();
-                        }
-                    }
-                },function(res){
-                    wx.hideLoading()
-                    //utils.showModal('提示', res.errMsg,false);
-                });
-            }
-          }
-    })
 }
 
 /*获取用户敏感信息*/
@@ -211,8 +172,6 @@ function getminfo(encry,iv,signature,rawData,fn){  //获取敏感信息unionid,�
 }
 module.exports = {
   getuinfo: getuinfo,
-  getminfo: getminfo,
-  gologin: gologin,
   getin: getin,
   checkwxse:checkwxse,
   wxlogin:wxlogin

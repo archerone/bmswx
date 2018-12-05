@@ -301,9 +301,9 @@ Page({
       animationData: animation.export(),
     })
     setTimeout(function () {
-      animation.translateY(0).step()
+      //animation.translateY(0).step()
       this.setData({
-        animationData: animation.export(),
+        //animationData: animation.export(),
         openShare: false
       })
     }.bind(this), 200)
@@ -323,22 +323,18 @@ Page({
   },
   wxlogin(){
      var that = this;
-     login.wxlogin(function(res){
+     login.wxlogin(function(){
         that.setData({
           islogin: true
         })
-        that.getin(res);
+        that.getin();
      })
   },
-  getin:function(res){  //登录活动服务器
+  getin:function(){  //登录活动服务器
       var that = this;
-      var _res = res;
-      app.globalData.userInfo.nickName = wx.getStorageSync('nickName');
-      app.globalData.userInfo.avatarUrl = wx.getStorageSync('avatarUrl');
-      login.getin(app.globalData.userInfo.nickName,app.globalData.userInfo.avatarUrl,_res,function(res){
-        console.log(res.data.msg);
+      login.getin(function(res){
         if(res.data.code == 702){
-            that.getact();
+            that.getact()
         }else{
             wx.showToast({
               title: res.data.msg,
