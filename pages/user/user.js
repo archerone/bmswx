@@ -14,7 +14,8 @@ Page({
     joinlist:[],
     winactid:[],
     joinactid:[],
-    islogin:false
+    islogin:false,
+    payobj:{}
   },
 
   gotoShare() {
@@ -43,6 +44,36 @@ Page({
           })
           that.getuact();
       })
+  },
+  topay(){
+      var that = this;
+      var orderno = "z"+new Date().getTime();
+      utils.showLoading("加载中...");
+      utils.request('/api/wxpay/jsapi/torder/xcxpackage',
+          {
+            openid: "oS5m84qVANh092TAi5K3zHwG_Peo",
+            amount: 0.01,
+            tradeno:orderno,
+            ordername:"xcxpay"
+          },
+          "POST", 2, function (res) {
+            wx.hideLoading()
+            console.log(res)
+            wx.requestPayment({
+                'timeStamp':res.data.timeStamp,
+                'nonceStr':res.data.nonceStr,
+                'package':res.data.package,
+                'signType':res.data.signType,
+                'paySign':res.data.paySign,
+                'success':function(res){console.log('success',res)},
+                'fail':function(res){console.log('fail',res)},
+                'complete':function(res){console.log('complete',res)}
+            })
+
+      },function(res){
+          wx.hideLoading()
+          //utils.showModal('提示', res.errMsg,false);
+      });
   },
   getuact(){
       var that = this;

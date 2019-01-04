@@ -17,6 +17,9 @@
         <view class="infos">
           <text class="infos_time">截止时间: {{actdata.endtime}}</text>
         </view>
+        <view class="infos">
+          <text class="infos_time">关注公众号"贝美森生物科技",了解更多活动详情。</text>
+        </view>
         <view class="infos_resu" wx:if="{{status==1 && islogin}}">
            <view wx:if="{{iswin==0}}">
               <image src='../../assets/image/icon-failure.png' class="resu_img"></image>
@@ -82,9 +85,6 @@
     <view class="list-item3">
        <view class="item3_tit">
          活动详情
-       </view>
-       <view class="item3_info">
-        参与资格：限已关注“贝美森生物科技”公众号的用户
        </view>
        <view class="item3_info">
         活动开始时间：{{actdata.begintime}}
