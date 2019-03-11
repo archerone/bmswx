@@ -5,15 +5,11 @@ let postUrl = cfg.domain;
  */
 function request(url, data, method, headertype, successCallback, failCallback, completeCallback) {
   //var sessionId = wx.getStorageSync("sessionId");
-  if(wx.getStorageSync("thirdsess")){
-      //小程序暂时无法设置request header,把thirdsess带入每次请求参数中
-      data['thirdsess'] = wx.getStorageSync('thirdsess');
-  }
 
   if(headertype == 2){
-      var header = {'content-type': 'application/x-www-form-urlencoded'}
+      var header = {'content-type': 'application/x-www-form-urlencoded','token':wx.getStorageSync('thirdsess')}
   }else{
-      var header = {'content-type': 'application/json'}
+      var header = {'content-type': 'application/json','token':wx.getStorageSync('thirdsess')}
   }
 
   //获取网络类型。
@@ -275,18 +271,18 @@ function getRemainderTime (ntime){
 }
 
 module.exports = {
-  request: request,
-  showToast: showToast,
-  showLoading: showLoading,
-  showModal: showModal,
-  showActionSheet: showActionSheet,
-  setStorage: setStorage,
-  getStorage: getStorage,
-  makePhoneCall: makePhoneCall,
-  navigateTo: navigateTo,
-  redirectTo: redirectTo,
-  isInArray: isInArray,
-  formatTime: formatTime,
-  dateFormat: dateFormat,
-  getRemainderTime: getRemainderTime
+    request: request,
+    showToast: showToast,
+    showLoading: showLoading,
+    showModal: showModal,
+    showActionSheet: showActionSheet,
+    setStorage: setStorage,
+    getStorage: getStorage,
+    makePhoneCall: makePhoneCall,
+    navigateTo: navigateTo,
+    redirectTo: redirectTo,
+    isInArray: isInArray,
+    formatTime: formatTime,
+    dateFormat: dateFormat,
+    getRemainderTime: getRemainderTime
 }

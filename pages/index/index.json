@@ -1,3 +1,6 @@
 {
-	"navigationBarTitleText":"健康体验首页"
+	"navigationBarTitleText":"健康体验首页",
+  "usingComponents":{
+    "goshop":"/components/goshop/goshop"
+  }
 }

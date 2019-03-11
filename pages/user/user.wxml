@@ -19,7 +19,7 @@
   <view class="listwrap">
     <button open-type="getUserInfo" class="item_btn" bindgetuserinfo="wxlogin" wx:if="{{!islogin}}">微信登录</button>
     <button class="item_btn2" bindtap="refwx" wx:if="{{islogin}}">刷 新</button>
-    <button class="item_btn2" bindtap="topay" wx:if="{{islogin}}">支 付</button>
+    <!--<button class="item_btn2" bindtap="topay" wx:if="{{islogin}}">支 付</button>-->
     <button class="item_btn2" bindtap="wxlogout" wx:if="{{islogin}}">退出登录</button>
   </view>
 </view>

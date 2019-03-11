@@ -1,0 +1,5 @@
+<!--components/goshop/goshop.wxml-->
+<view class="list-item" wx:for="{{testdata}}" wx:key="id">
+   <view><slot></slot></view>
+   <text class="my-class">{{item.actname}}</text>
+</view>
