@@ -53,6 +53,9 @@ Page({
          })
      }
   },
+  comevent(e){
+     console.log("gg",e.detail);
+  },
   scrollmore(){
     if(this.data.nomore){
       wx.showToast({

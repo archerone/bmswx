@@ -25,6 +25,10 @@ Component({
    * 组件的方法列表
    */
   methods: {
-
+      ontap(){
+        const myEventDetail = {"a":"gaa"};
+        const myEventOption = {};
+        this.triggerEvent('myevent',myEventDetail,myEventOption)
+      }
   }
 })
