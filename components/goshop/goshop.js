@@ -27,8 +27,27 @@ Component({
   methods: {
       ontap(){
         const myEventDetail = {"a":"gaa"};
-        const myEventOption = {};
+        const myEventOption = {bubbles:true,composed:true};
         this.triggerEvent('myevent',myEventDetail,myEventOption)
+      },
+      comevent(e){
+         console.log("goo",e.detail);
+      },
+  },
+  lifetimes: {
+      attached(){  //组件实例进入页面
+
+      },
+      detached(){
+
       }
+  },
+  pageLifetimes: {
+      show(){  //页面被展示
+
+      },
+      hide(){},
+      resize(size){}
+
   }
 })

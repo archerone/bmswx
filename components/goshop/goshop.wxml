@@ -1,5 +1,5 @@
 <!--components/goshop/goshop.wxml-->
-<view class="list-item" wx:for="{{testdata}}" wx:key="id">
+<view class="list-item" wx:for="{{testdata}}" wx:key="id" bind:myevent="comevent">
    <view><slot></slot></view>
    <text class="my-class" bindtap="ontap">{{item.actname}}</text>
 </view>
