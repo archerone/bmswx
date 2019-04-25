@@ -2,7 +2,7 @@
 <template is="offic_top"></template>
 
 <view class="list-box">
-  <goshop testdata="{{litems}}" bind:myevent="comevent" my-class="red-txt">插槽数据</goshop>
+  <!--<goshop testdata="{{litems}}" bind:myevent="comevent" my-class="red-txt">插槽数据</goshop>-->
   <scroll-view scroll-y="true" lower-threshold="50" style='height:100%' bindscrolltolower="scrollmore">
     <image style="width:100%;height:150rpx;" src="../../assets/image/offictop.png"></image>
     <view class="list-item" wx:for="{{litems}}" wx:key="id" wx:for-item="litemData">
