@@ -85,7 +85,7 @@ Page({
             num: that.data.page,
             numget: that.data.size
           },
-          "POST", 1, function (res) {
+          "POST", 2, function (res) {
           wx.hideLoading()
           //that.litems = res.data;
           const {data} = res;
