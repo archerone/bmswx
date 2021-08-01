@@ -90,6 +90,7 @@ Page({
             sharekey: _this.data.sharekey
           },
           "POST", 2, function (res) {
+          console.log(res,'getqcode')
           wx.hideLoading()
           _this.setData({
               shareImgurl: res.data
@@ -238,7 +239,7 @@ Page({
           showModal: true
         })
       }, function (err) {
-
+        console.log(err,'绘图失败')
       })
 
   },
@@ -384,7 +385,7 @@ Page({
         })
         wx.hideLoading()
       }, function (err) {
-
+        console.log(err,'绘图失败')
       })
   },
   /**
