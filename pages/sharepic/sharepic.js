@@ -113,7 +113,7 @@ Page({
       var imgw = 550;//698
       var imgh = 268;//341
       var _this = this;
-      const ctx = wx.createCanvasContext('shareCanvas')
+      const ctx = wx.createCanvasContext('shareCanvas',this)
       ctx.setFillStyle('#546bff')
       ctx.fillRect(0, 0, ow, oh)
 
@@ -255,7 +255,7 @@ Page({
       var imgw = 698;//698
       var imgh = 341;//341
       var _this = this;
-      const ctx = wx.createCanvasContext('shareCanvas')
+    const ctx = wx.createCanvasContext('shareCanvas',this)
       //ctx.setFillStyle('#546bff')
       ctx.setFillStyle('#546bff')
       ctx.fillRect(0, 0, ow, oh)
