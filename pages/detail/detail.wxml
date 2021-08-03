@@ -36,7 +36,7 @@
            </view>
         </view>
         <block wx:if="{{!islogin}}">
-            <button open-type="getUserInfo" bindgetuserinfo="wxlogin" class="item_btn">微信登录</button>
+            <button bindtap="wxlogin" class="item_btn">微信登录</button>
         </block>
         <block wx:else>
             <button class="item_btn" bindtap="opengroup" wx:if="{{status==0 && !iscreat && isbegin && !isend}}">创建队伍</button>

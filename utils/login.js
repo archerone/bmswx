@@ -5,40 +5,55 @@ var utils = require('./util.js');
 
 /*获取微信用户信息*/
 function getuinfo(fn) {
-    wx.getSetting({
-      success(res) {
-        if (!res.authSetting['scope.userInfo']) {  //若拿不到授权信息
-          wx.authorize({
-            scope: 'scope.userInfo',
-            success(res) {
-
-            },
-            fail(){
-              console.log('未授权1')
-              wx.hideLoading()
-              wx.removeStorageSync('thirdsess')
-              wx.removeStorageSync('nickName');
-              wx.removeStorageSync('avatarUrl');
-            }
-          })
-        }
-        else {
-          console.log('已授权')
-          wx.getUserInfo({
-            success: (res) => {
-              // if (that.userInfoReadyCallback) {
-              //   that.userInfoReadyCallback(res)
-              // }
-              if(fn){
-                  fn(res);
-              }
-
-            }
-          })
-          //that.UserLogin();
-        }
+  console.log(5.5)
+  wx.getUserProfile({
+    desc: '用于完善会员资料',
+    success: (res) => {
+      console.log(1,res)
+      // if (that.userInfoReadyCallback) {
+      //   that.userInfoReadyCallback(res)
+      // }
+      if (fn) {
+        fn(res);
       }
-    })
+  
+    }
+  })
+    // wx.getSetting({
+    //   success(res) {
+    //     if (!res.authSetting['scope.userInfo']) {  //若拿不到授权信息
+    //       wx.authorize({
+    //         scope: 'scope.userInfo',
+    //         success(res) {
+
+    //         },
+    //         fail(){
+    //           console.log('未授权1')
+    //           wx.hideLoading()
+    //           wx.removeStorageSync('thirdsess')
+    //           wx.removeStorageSync('nickName');
+    //           wx.removeStorageSync('avatarUrl');
+    //         }
+    //       })
+    //     }
+    //     else {
+    //       console.log('已授权')
+    //       wx.getUserInfo({
+    //         success: (res) => {
+    //           console.log(res)
+    //           // if (that.userInfoReadyCallback) {
+    //           //   that.userInfoReadyCallback(res)
+    //           // }
+    //           if(fn){
+    //               fn(res);
+    //           }
+
+    //         }
+    //       })
+    //       //that.UserLogin();
+    //     }
+    //   }
+    // })
 }
 
 /*用微信授权登录,成功后参与活动*/
@@ -50,6 +65,7 @@ function wxlogin(fn){
         wx.showLoading("数据加载中");
         wx.login({
             success: wxres => {
+              console.log(0,wxres)
               if(wxres.code){
                 u_code = wxres.code;
                 resolve();
@@ -120,22 +136,29 @@ function getin(fn){
 
 //仅判断客户端和微信端sess是否过期,页面见切换时用到
 function checkwxse(fn1,fn2){
+  console.log(5)
    wx.checkSession({
        success:function(){
+         console.log(5.1)
           wx.hideLoading()
-          getuinfo(function(res){
-                var avatarUrl = res.userInfo.avatarUrl?res.userInfo.avatarUrl:'https://res.beimsn.com/xcx/noavar.png';
-                var nickName = res.userInfo.nickName;
-                wx.setStorageSync('avatarUrl',avatarUrl);
-                wx.setStorageSync('nickName',nickName);
+          if (fn1) {
+            fn1();
+          }
+          // getuinfo(function(res){
+          //   console.log(6, res)
+          //       var avatarUrl = res.userInfo.avatarUrl?res.userInfo.avatarUrl:'https://res.beimsn.com/xcx/noavar.png';
+          //       var nickName = res.userInfo.nickName;
+          //       wx.setStorageSync('avatarUrl',avatarUrl);
+          //       wx.setStorageSync('nickName',nickName);
 
-                if(fn1){
-                  fn1(res);
-                }
+          //       if(fn1){
+          //         fn1(res);
+          //       }
 
-          })
+          // })
        },
        fail:function(){
+         console.log(5.2)
           wx.hideLoading()
           wx.removeStorageSync('thirdsess')
           wx.removeStorageSync('nickName');

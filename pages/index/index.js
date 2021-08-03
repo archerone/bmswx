@@ -16,6 +16,7 @@ Page({
     islogin:false
   },
   checklogin(){
+    console.log(4)
      var that = this;
      if(!wx.getStorageSync('thirdsess')){
         that.setData({

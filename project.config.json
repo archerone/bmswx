@@ -9,7 +9,7 @@
 		"nodeModules": false
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.3.0",
+	"libVersion": "2.14.1",
 	"appid": "wxd40ba3259097c636",
 	"projectname": "bmsxcx",
 	"isGameTourist": false,

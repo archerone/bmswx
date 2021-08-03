@@ -340,8 +340,16 @@ Page({
       //头像信息
       const p3 = new Promise(function (resolve, reject) {
         app.globalData.userInfo.avatarUrl = wx.getStorageSync('avatarUrl');
+        console.log(333, wx.getStorageSync('avatarUrl'))
+        var opath = wx.getStorageSync('avatarUrl');
+        if (opath.indexOf("http://thirdwx.qlogo.cn") != -1) {
+          opath = opath.replace('http://thirdwx.qlogo.cn', 'https://wx.qlogo.cn')
+        }
+        if (opath.indexOf("https://thirdwx.qlogo.cn") != -1) {
+          opath = opath.replace('https://thirdwx.qlogo.cn', 'https://wx.qlogo.cn')
+        }
         wx.getImageInfo({
-          src: app.globalData.userInfo.avatarUrl,
+          src: opath,
           success: function (res) {
             console.log(res)
             var ileft = 0.416 * ow; (312 / 750)
